@@ -2,6 +2,8 @@ package br.com.ifpb.pweb2.HermesWallet.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Category {
 
@@ -14,5 +16,5 @@ public class Category {
     private int order;
 
     @OneToMany
-    private Transaction transaction;
+    private List<Transaction> transaction;
 }

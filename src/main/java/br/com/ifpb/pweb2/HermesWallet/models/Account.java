@@ -3,6 +3,7 @@ package br.com.ifpb.pweb2.HermesWallet.models;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Account {
@@ -19,6 +20,6 @@ public class Account {
     private AccountHolder holder;
 
     @OneToMany
-    private Transaction transaction;
+    private List<Transaction> transaction;
     //TODO correntistas
 }

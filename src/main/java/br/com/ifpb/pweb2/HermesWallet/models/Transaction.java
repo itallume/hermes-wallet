@@ -17,7 +17,6 @@ public class Transaction {
     private String comment;
     @ManyToOne
     private Account account;
-
     @ManyToOne
     private Category category;
 

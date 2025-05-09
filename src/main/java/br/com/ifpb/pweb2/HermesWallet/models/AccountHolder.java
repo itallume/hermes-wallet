@@ -2,6 +2,8 @@ package br.com.ifpb.pweb2.HermesWallet.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class AccountHolder {
 
@@ -10,5 +12,5 @@ public class AccountHolder {
     private Long id;
     private String name;
     @OneToMany
-    private Account account;
+    private List<Account> account;
 }
