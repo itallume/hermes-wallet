@@ -14,5 +14,6 @@ public class AccountController {
     public String accountHomePage(HttpServletRequest request, Model model){
         return "account";
     }
+
     
 }
