@@ -7,16 +7,16 @@ import java.util.List;
 
 @Data
 @Entity
-public class Category {
+public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private boolean isActive;
-    private String nature; //TODO enum pra isso
-    private int order_number;
+    private String nome;
+    private boolean ativo;
+    private String natureza; //TODO enum pra isso
+    private int ordem;
 
     @OneToMany
-    private List<Transaction> transaction;
+    private List<Transacao> transacoes;
 }

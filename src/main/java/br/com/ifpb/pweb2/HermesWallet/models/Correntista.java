@@ -7,12 +7,12 @@ import java.util.List;
 
 @Data
 @Entity
-public class AccountHolder {
+public class Correntista {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String nome;
     @OneToMany
-    private List<Account> account;
+    private List<Conta> contas;
 }

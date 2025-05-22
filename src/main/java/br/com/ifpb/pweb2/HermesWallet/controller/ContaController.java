@@ -8,11 +8,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RequestMapping("/account")
 @Controller
-public class AccountController {
+public class ContaController {
 
     @RequestMapping("/main")
     public String accountHomePage(HttpServletRequest request, Model model){
-        return "account";
+        return "conta";
     }
 
     
