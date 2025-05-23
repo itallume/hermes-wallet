@@ -3,7 +3,6 @@ package br.com.ifpb.pweb2.HermesWallet.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Data

@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long>{
 
-    List<Conta> findByAccountHolderId(Long id);
+    List<Conta> findByCorrentistaId(Long id);
     
 }

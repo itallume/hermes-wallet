@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@RequestMapping("/account")
+@RequestMapping("/conta")
 @Controller
 public class ContaController {
 
     @RequestMapping("/main")
-    public String accountHomePage(HttpServletRequest request, Model model){
+    public String contaHomePage(HttpServletRequest request, Model model){
         return "conta";
     }
 
