@@ -1,12 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Page</title>
 </head>
 <body>
-    <h1>Account List</h1>
-    
+    <h1>Lista de contas</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Descrição</th>
+                <th>Número</th>
+                <th>Dia de fechamento</th>
+                <th>Tipo de conta</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="conta : ${contas}">
+                <td>[[${conta.id}]]</td>
+                <td>[[${conta.descricao}]]</td>
+                <td>[[${conta.numero}]]</td>
+                <td>[[${conta.diaFechamento}]]</td>
+                <td>[[${conta.tipo}]]</td>
+
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>

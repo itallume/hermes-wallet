@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Page</title>
+</head>
+<body>
+    <h1>Cadastro de contas</h1>
+
+    <form th:action="@{/conta/save}" method="post" th:object="${conta}">
+        <input type="hidden" th:field="*{id}"/><br>
+        Descrição: <input type="text" th:field="*{descricao}"/><br>
+        Número: <input type="text" th:field="*{numero}"/><br>
+        Data de fechamento: <input type="date" th:field="*{diaFechamento}"/><br>
+        Tipo:
+            <select th:field="*{tipo}">
+                <option th:each="tipo : ${tiposConta}" th:value="${tipo}" th:text="${tipo}"></option>
+            </select>
+        <br>
+        <button type="submit">Criar</button>
+    </form>
+
+</body>
+</html>
