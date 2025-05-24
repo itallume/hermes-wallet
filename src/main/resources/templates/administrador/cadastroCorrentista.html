@@ -6,8 +6,11 @@
     <title>Cadastro Correntista</title>
 </head>
 <body>
-    <form>
+    <form method="POST" th:Action="@{/admin/cadastro/correntista}" th:Object="${correntista}">
 
+        <label>Nome</label>
+        <input type="text" th:field="*{nome}">
+        <input type="submit" >
     </form>
 </body>
 </html>

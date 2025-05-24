@@ -6,6 +6,19 @@
     <title>Listagem Correntistas</title>
 </head>
 <body>
-
+    <table border="1">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Nome</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="correntista : ${correntistas}">
+                <td>[[${correntista.id}]]</td>
+                <td th:text="${correntista.nome}"></td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

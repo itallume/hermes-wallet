@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("admin")
+@RequestMapping("/admin")
 public class AdministradorController {
 
     @Autowired
@@ -27,18 +27,18 @@ public class AdministradorController {
     }
 
     @PostMapping("/cadastro/correntista")
-    public ModelAndView salvarCorrentista(Correntista correntista ,ModelAndView model, RedirectAttributes attr){
+    public ModelAndView salvarCorrentista(Correntista correntista, ModelAndView model, RedirectAttributes attr){
         //TODO regras de negocio
         correntistaService.save(correntista);
         attr.addFlashAttribute("mensagem", "Correntista inserido com sucesso!");
-        model.setViewName("redirect:listagem/correntistas");
+        model.setViewName("redirect:/admin/listagem/correntista");
         return model;
     }
 
-    @GetMapping("/listagem/correntistas")
+    @GetMapping("/listagem/correntista")
     public ModelAndView listagemCorrentistas(ModelAndView model){
         model.addObject("correntistas", correntistaService.findAll());
-        model.setViewName("administrador/listagemCorrentitas");
+        model.setViewName("administrador/listagemCorrentistas");
         return model;
     }
 

@@ -12,8 +12,9 @@ import br.com.ifpb.pweb2.HermesWallet.models.TipoConta;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
 
 
-@RequestMapping("/conta")
+
 @Controller
+@RequestMapping("/conta")
 public class ContaController {
 
     @Autowired
