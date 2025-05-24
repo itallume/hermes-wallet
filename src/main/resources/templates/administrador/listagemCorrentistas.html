@@ -6,6 +6,13 @@
     <title>Listagem Correntistas</title>
 </head>
 <body>
+
+    <h2 th:text="${mensagem}"></h2>
+
+    <form th:action="@{/admin/cadastro/correntista}" method="GET">
+        <button class="btn btn-primary" type="submit">Novo</button>
+    </form>
+
     <table border="1">
         <thead>
             <tr>

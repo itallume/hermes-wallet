@@ -1,7 +1,6 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
-import br.com.ifpb.pweb2.HermesWallet.service.AdministradorService;
 import br.com.ifpb.pweb2.HermesWallet.service.CorrentistaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,16 +17,15 @@ public class AdministradorController {
     @Autowired
     private CorrentistaService correntistaService;
 
-
     @GetMapping("/cadastro/correntista")
-    public ModelAndView exibirPaginaDeCadastroCorrentista(Correntista correntista, ModelAndView model){
+    public ModelAndView getForm(Correntista correntista, ModelAndView model){
         model.addObject("correntista", correntista);
         model.setViewName("administrador/cadastroCorrentista");
         return model;
     }
 
     @PostMapping("/cadastro/correntista")
-    public ModelAndView salvarCorrentista(Correntista correntista, ModelAndView model, RedirectAttributes attr){
+    public ModelAndView save(Correntista correntista, ModelAndView model, RedirectAttributes attr){
         //TODO regras de negocio
         correntistaService.save(correntista);
         attr.addFlashAttribute("mensagem", "Correntista inserido com sucesso!");
@@ -36,7 +34,7 @@ public class AdministradorController {
     }
 
     @GetMapping("/listagem/correntista")
-    public ModelAndView listagemCorrentistas(ModelAndView model){
+    public ModelAndView list(ModelAndView model){
         model.addObject("correntistas", correntistaService.findAll());
         model.setViewName("administrador/listagemCorrentistas");
         return model;
