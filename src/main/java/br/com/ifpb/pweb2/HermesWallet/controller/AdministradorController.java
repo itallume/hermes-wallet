@@ -40,6 +40,4 @@ public class AdministradorController {
         return model;
     }
 
-
-
 }

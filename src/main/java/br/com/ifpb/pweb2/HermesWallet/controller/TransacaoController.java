@@ -46,7 +46,7 @@ public class TransacaoController {
 
     @GetMapping("/{id}")
     public ModelAndView getTransacao(@PathVariable( value = "idConta") Long idConta,
-                                     @PathVariable("id") Long id,//id transacao
+                                     @PathVariable("id") Long id,
                                      ModelAndView modelAndView){
         modelAndView.addObject("transacao", transacaoService.findById(id));
         modelAndView.setViewName("transacao/formularioTransacao");
