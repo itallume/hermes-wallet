@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
-<head th:replace="~{/fragments/base :: head(${titulo})}">
+<head>
+    <meta th:insert="~{/fragments/base :: head(${titulo})}">
 </head>
 <body>
     <div th:replace="~{/fragments/base :: header}"></div>
