@@ -21,7 +21,7 @@ public class TransacaoService {
     private ContaRepository _contaRepository;
 
     @Transactional
-    public Transacao createTransacao(Transacao novaTransacao){
+    public Transacao save(Transacao novaTransacao){
         return _transacaoRepository.save(novaTransacao);
     }
 
@@ -40,3 +40,5 @@ public class TransacaoService {
         return _transacaoRepository.findByContaId(contaId);
     }
 }
+
+

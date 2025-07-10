@@ -38,7 +38,7 @@ public class AutenticacaoController {
             return model;
         }
 
-        session.setAttribute("usuario", correntista);
+        session.setAttribute("correntista", correntista);
         String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
         model.setViewName(destino);
         return model;
