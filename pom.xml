@@ -68,7 +68,7 @@
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/br.com.caelum.stella/caelum-stella-core -->
 		<dependency>
 			<groupId>br.com.caelum.stella</groupId>
@@ -82,6 +82,11 @@
 			<version>0.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
