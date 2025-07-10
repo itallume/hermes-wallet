@@ -2,6 +2,7 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.repository.CorrentistaRepository;
+import br.com.ifpb.pweb2.HermesWallet.util.SenhaUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,23 +27,16 @@ public class AutenticacaoController {
         return model;
     }
 
-    //TODO add hash
     @PostMapping("/login")
     public ModelAndView authenticate(ModelAndView model, Correntista correntista, HttpSession session, RedirectAttributes attributes){
-        if (correntista.getCpf().isBlank() || correntista.getSenha().isBlank()){
-            attributes.addFlashAttribute("msg", "Dados inválidos");
+        Correntista correntistaLogado;
+        try {
+            correntistaLogado = this.verificaCorrentista(correntista);
+        } catch (Exception e) {
+            attributes.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/login");
             return model;
         }
-
-        Optional<Correntista> c = correntistaRepository.findByCpfAndSenha(correntista.getCpf(), correntista.getSenha());
-
-        if (c.isEmpty()){
-            attributes.addFlashAttribute("msg", "CPF ou senha inválidos");
-            model.setViewName("redirect:/login");
-            return model;
-        }
-        correntista = c.get();
 
         session.setAttribute("usuario", correntista);
         String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
@@ -57,5 +51,23 @@ public class AutenticacaoController {
         return mav;
     }
 
+    private Correntista verificaCorrentista(Correntista correntista) throws Exception {
+        if (correntista.getCpf().isBlank()){
+            throw new Exception("Digite um cpf");
+        }
+        if ( correntista.getSenha().isBlank()){
+            throw new Exception("Digite uma senha");
+        }
+
+        Optional<Correntista> c = correntistaRepository.findByCpf(correntista.getCpf());
+        if (c.isEmpty()) {
+            throw new Exception("CPF ou senha inválidos");
+        }
+        Correntista correntistaEncontrado = c.get();
+        if (SenhaUtil.verificarSenha(correntista.getSenha(), correntistaEncontrado.getSenha())){
+            return correntistaEncontrado;
+        }
+        return null;
+    }
 
 }

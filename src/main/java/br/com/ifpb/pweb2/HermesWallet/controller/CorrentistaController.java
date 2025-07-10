@@ -26,10 +26,14 @@ public class CorrentistaController {
 
     @PostMapping
     public ModelAndView save(Correntista correntista, ModelAndView model, RedirectAttributes attr){
-        //TODO regras de negocio
-        correntistaService.save(correntista);
-        attr.addFlashAttribute("mensagem", "Correntista inserido com sucesso!");
-        model.setViewName("redirect:/correntista");
+        try{
+            correntistaService.save(correntista);
+            attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
+            model.setViewName("redirect:/correntista");
+        } catch (Exception e) {
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/correntista/form");
+        }
         return model;
     }
 

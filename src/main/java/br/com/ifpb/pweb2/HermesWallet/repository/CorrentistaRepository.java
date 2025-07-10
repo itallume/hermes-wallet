@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface CorrentistaRepository extends JpaRepository<Correntista, Long>{
-
-    Optional<Correntista> findByCpfAndSenha(String cpf, String senha);
+    Optional<Correntista> findByCpf(String cpf);
 }
