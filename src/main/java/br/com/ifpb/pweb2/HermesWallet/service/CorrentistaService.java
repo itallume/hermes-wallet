@@ -16,9 +16,11 @@ public class CorrentistaService {
     private CorrentistaRepository correntistaRepoitory;
 
     public Correntista save(Correntista correntista) throws Exception {
-        CPFValidator validadorCpf = new CPFValidator();
-        if (!validadorCpf.isEligible(correntista.getCpf())){
-            throw new Exception("CPF inválido");
+        if (!correntista.isAdmin()){
+            CPFValidator validadorCpf = new CPFValidator();
+            if (!validadorCpf.isEligible(correntista.getCpf())){
+                throw new Exception("CPF inválido");
+            }
         }
 
         Optional<Correntista> correntistaExistente = correntistaRepoitory.findByCpf(correntista.getCpf());

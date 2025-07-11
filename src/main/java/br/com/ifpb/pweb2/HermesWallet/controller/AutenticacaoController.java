@@ -1,5 +1,9 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
+import br.com.ifpb.pweb2.HermesWallet.DTO.LoginDTO;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.DadosLoginInvalido;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.LoginOuSenhaInvalidos;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.SenhaInvalida;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.repository.CorrentistaRepository;
 import br.com.ifpb.pweb2.HermesWallet.util.SenhaUtil;
@@ -8,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,26 +24,29 @@ public class AutenticacaoController {
     private CorrentistaRepository correntistaRepository;
 
     @GetMapping("/login")
-    public ModelAndView getForm(ModelAndView model, Correntista c){
-        model.addObject("usuario", c);
+    public ModelAndView getForm(ModelAndView model, LoginDTO loginDTO){
+        model.addObject("login", loginDTO);
         model.setViewName("/autenticacao/login");
         return model;
     }
 
     @PostMapping("/login")
-    public ModelAndView authenticate(ModelAndView model, Correntista correntista, HttpSession session, RedirectAttributes attributes){
-        Correntista correntistaLogado;
+    public ModelAndView authenticate(ModelAndView model, LoginDTO loginDTO, HttpSession session, RedirectAttributes attributes){
         try {
-            correntistaLogado = this.verificaCorrentista(correntista);
-        } catch (Exception e) {
-            attributes.addFlashAttribute("erro", e.getMessage());
-            model.setViewName("redirect:/login");
+            Correntista correntista = this.obterCorrentistaPeloLogin(loginDTO);
+            this.verificaCorrentista(loginDTO.senha(), correntista);
+            session.setAttribute("correntista", correntista);
+            String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
+            model.setViewName(destino);
             return model;
+        } catch (LoginOuSenhaInvalidos e) {
+            attributes.addFlashAttribute("erro", e.getMessage());
+        } catch (SenhaInvalida e) {
+            attributes.addFlashAttribute("erroSenha", e.getMessage());
+        } catch (DadosLoginInvalido e) {
+            attributes.addFlashAttribute("erroLogin", e.getMessage());
         }
-
-        session.setAttribute("correntista", correntista);
-        String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
-        model.setViewName(destino);
+        model.setViewName("redirect:/login");
         return model;
     }
 
@@ -51,23 +57,41 @@ public class AutenticacaoController {
         return mav;
     }
 
-    private Correntista verificaCorrentista(Correntista correntista) throws Exception {
-        if (correntista.getCpf().isBlank()){
-            throw new Exception("Digite um cpf");
-        }
-        if ( correntista.getSenha().isBlank()){
-            throw new Exception("Digite uma senha");
-        }
+    private void verificaCorrentista(String senhaDigitada, Correntista correntista) throws LoginOuSenhaInvalidos {
 
-        Optional<Correntista> c = correntistaRepository.findByCpf(correntista.getCpf());
-        if (c.isEmpty()) {
-            throw new Exception("CPF ou senha inválidos");
+//        Optional<Correntista> c = correntistaRepository.findByEmail(correntista.getEmail());
+//        if (c.isEmpty()) {
+//            throw new LoginOuSenhaInvalidos("Login ou senha inválidos");
+//        }
+//        Correntista correntistaEncontrado = c.get();
+        if (!SenhaUtil.verificarSenha(senhaDigitada, correntista.getSenha())){
+            throw new LoginOuSenhaInvalidos("Login ou Senha inválidos");
         }
-        Correntista correntistaEncontrado = c.get();
-        if (SenhaUtil.verificarSenha(correntista.getSenha(), correntistaEncontrado.getSenha())){
-            return correntistaEncontrado;
+    }
+
+    private Correntista obterCorrentistaPeloLogin(LoginDTO l) throws DadosLoginInvalido, LoginOuSenhaInvalidos, SenhaInvalida {
+        String login = l.login();
+        String senha = l.senha();
+        if ( senha.isBlank() || senha.length() < 8){
+            throw new SenhaInvalida("Digite uma senha válida");
         }
-        return null;
+        if (login.isBlank()){
+            throw new DadosLoginInvalido("Digite um CPF ou Email");
+        }
+        Optional<Correntista> c;
+
+        //é cpf?
+        if (login.matches("^\\d{11}$")){
+            c = correntistaRepository.findByCpf(login);
+
+            //ent é email
+        } else{
+            c = correntistaRepository.findByEmail(login);
+        }
+        if (c.isEmpty()){
+            throw new LoginOuSenhaInvalidos("Login ou Senha inválidos");
+        }
+        return c.get();
     }
 
 }

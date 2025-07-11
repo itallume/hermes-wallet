@@ -18,6 +18,7 @@ public class Correntista {
     private Long id;
     private String nome;
     private String cpf;
+    private String email;
     private String senha;
     private boolean admin;
     @OneToMany
