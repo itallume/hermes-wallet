@@ -20,7 +20,7 @@ public class ContaController {
     @Autowired
     ContaService _contaService;
 
-    @GetMapping("create")
+    @GetMapping("form")
     public ModelAndView createForm(ModelAndView model) {
         model.addObject("conta", new Conta());
         model.addObject("tiposConta", TipoConta.values());

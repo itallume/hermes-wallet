@@ -29,7 +29,7 @@ public class CorrentistaController {
         try{
             correntistaService.save(correntista);
             attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
-            model.setViewName("redirect:/correntista");
+            model.setViewName("redirect:/correntista/form");
         } catch (Exception e) {
             attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/correntista/form");
@@ -37,7 +37,7 @@ public class CorrentistaController {
         return model;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ModelAndView list(ModelAndView model){
         model.addObject("correntistas", correntistaService.findAll());
         model.setViewName("correntista/listagemCorrentistas");
