@@ -37,7 +37,7 @@ public class CorrentistaController {
         return model;
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ModelAndView list(ModelAndView model){
         model.addObject("correntistas", correntistaService.findAll());
         model.setViewName("correntista/listagemCorrentistas");

@@ -23,6 +23,12 @@ public class AutenticacaoController {
     @Autowired
     private CorrentistaRepository correntistaRepository;
 
+    @GetMapping("/")
+    public ModelAndView redirectLogin(ModelAndView model){
+        model.setViewName("redirect:/login");
+        return model;
+    }
+
     @GetMapping("/login")
     public ModelAndView getForm(ModelAndView model, LoginDTO loginDTO){
         model.addObject("login", loginDTO);
@@ -35,7 +41,7 @@ public class AutenticacaoController {
         try {
             Correntista correntista = this.obterCorrentistaPeloLogin(loginDTO);
             this.verificaCorrentista(loginDTO.senha(), correntista);
-            session.setAttribute("correntista", correntista);
+            session.setAttribute("usuario", correntista);
             String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
             model.setViewName(destino);
             return model;

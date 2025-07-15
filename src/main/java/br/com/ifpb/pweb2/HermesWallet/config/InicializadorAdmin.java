@@ -18,10 +18,10 @@ public class InicializadorAdmin implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (correntistaRepository.findByEmail("admin@bitbank.com").isEmpty()) {
+        if (correntistaRepository.findByEmail("admin@hermesWallet.com").isEmpty()) {
             Correntista correntista = new Correntista();
             correntista.setNome("Administrador");
-            correntista.setEmail("admin@bitbank.com");
+            correntista.setEmail("admin@hermesWallet.com");
             correntista.setSenha(SenhaUtil.hashSenha("12345678"));
             correntista.setAdmin(true);
 
