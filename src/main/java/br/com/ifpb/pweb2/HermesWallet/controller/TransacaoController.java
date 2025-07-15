@@ -2,6 +2,7 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 
 import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
+import br.com.ifpb.pweb2.HermesWallet.models.TipoCategoria;
 import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
@@ -29,11 +30,20 @@ public class TransacaoController {
     TransacaoService transacaoService;
 
     @GetMapping("/form")
-    public ModelAndView getForm(Transacao transacao, ModelAndView model, RedirectAttributes attr){
-        if (transacao.getConta() == null) {
-            transacao.setConta(new Conta());
+    public ModelAndView getForm(@PathVariable(value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr){
+
+        if (transacao.getConta() == null || transacao.getConta().getId() == null) {
+            Conta conta = contaRepository.findById(id).orElse(null);
+            if (conta == null) {
+                attr.addFlashAttribute("erro", "Conta não encontrada");
+                model.setViewName("redirect:/conta/list");
+                return model;
+            }
+            transacao.setConta(conta);
         }
+
         model.addObject("transacao", transacao);
+        model.addObject("categorias", TipoCategoria.values());
         model.setViewName("transacao/formularioTransacao");
         return model;
     }
@@ -52,8 +62,6 @@ public class TransacaoController {
         Conta conta = c.get();
         Correntista correntista = (Correntista) session.getAttribute("correntista");
 
-
-
         try{
             transacaoService.save(transacao);
             attr.addFlashAttribute("mensagem", "Transacao criada com sucesso!");
@@ -68,6 +76,7 @@ public class TransacaoController {
     @GetMapping
     public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model){
         model.addObject("transacoes", transacaoService.findAllById(id));
+        model.addObject("idConta", id);
         model.setViewName("transacao/listaTransacao");
         return model;
     }

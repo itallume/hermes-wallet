@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-
+//nao usar ainda
 @Data
 @Entity
 public class Categoria {

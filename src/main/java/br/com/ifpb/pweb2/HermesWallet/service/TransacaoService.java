@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class TransacaoService {
 
     @Transactional
     public Transacao save(Transacao novaTransacao){
+        novaTransacao.setData(Instant.now());
         return _transacaoRepository.save(novaTransacao);
     }
 

@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}" th:with="titulo='Lista de Transações'">
 <body>
+<div layout:fragment="content">
+    <h1>Lista de transações</h1>
 
+    <a th:href="@{'/conta/' + ${idConta} + '/transacoes/form'}">Nova Transação</a>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Data</th>
+            <th>Categoria</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transacao : ${transacoes}">
+            <td th:text="${transacao.id}"></td>
+            <td th:text="${transacao.descricao}"></td>
+            <td th:text="${transacao.valor}"></td>
+
+            <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
+
+            <td th:text="${transacao.categoria}"></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
