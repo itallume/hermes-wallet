@@ -33,13 +33,13 @@ public class TransacaoController {
     public ModelAndView getForm(@PathVariable(value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr){
 
         if (transacao.getConta() == null || transacao.getConta().getId() == null) {
-            Conta conta = contaRepository.findById(id).orElse(null);
-            if (conta == null) {
+            Optional<Conta> conta = contaRepository.findById(id);
+            if (conta.isEmpty()) {
                 attr.addFlashAttribute("erro", "Conta não encontrada");
                 model.setViewName("redirect:/conta/list");
                 return model;
             }
-            transacao.setConta(conta);
+            transacao.setConta(conta.get());
         }
 
         model.addObject("transacao", transacao);
@@ -61,6 +61,12 @@ public class TransacaoController {
 
         Conta conta = c.get();
         Correntista correntista = (Correntista) session.getAttribute("correntista");
+
+        if (conta.getCorrentista().getId() != correntista.getId() ){
+            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
+            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
+            return model;
+        }
 
         try{
             transacaoService.save(transacao);
