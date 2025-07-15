@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.TipoConta;
@@ -36,9 +37,15 @@ public class ContaController {
     }
 
     @PostMapping("save")
-    public ModelAndView save(Conta conta, ModelAndView model) {
+    public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr) {
+    	try {
+    	attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
         model.addObject("correntista", _contaService.createConta(conta).getCorrentista());
-        model.setViewName("conta/lista");
+        model.setViewName("redirect:/conta/form");
+    	} catch (Exception e) {
+    		attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/form");
+        }
         return model;
     }
 }

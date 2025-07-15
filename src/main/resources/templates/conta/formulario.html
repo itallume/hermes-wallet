@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html xmlns="www.thymeleaf.org" lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Page</title>
-</head>
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
 <body>
+    <div layout:fragment="content">
     <h1>Cadastro de contas</h1>
 
-    <form th:action="@{/conta/save}" method="post" th:object="${conta}">
+    <form method="POST" th:action="@{/conta/save}"  th:object="${conta}">
+
+		<div style='color: blue'>[[${msg}]]</div>
         <input type="hidden" th:field="*{id}"/><br>
         Descrição: <input type="text" th:field="*{descricao}"/><br>
         Número: <input type="text" th:field="*{numero}"/><br>
@@ -20,6 +19,6 @@
         <br>
         <button type="submit">Criar</button>
     </form>
-
+	</div>
 </body>
 </html>

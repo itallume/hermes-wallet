@@ -28,7 +28,7 @@ public class CorrentistaController {
     public ModelAndView save(Correntista correntista, ModelAndView model, RedirectAttributes attr){
         try{
             correntistaService.save(correntista);
-            attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
+            attr.addFlashAttribute("msg", "Conta inserido com sucesso!");
             model.setViewName("redirect:/correntista/form");
         } catch (Exception e) {
             attr.addFlashAttribute("erro", e.getMessage());
