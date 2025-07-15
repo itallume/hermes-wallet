@@ -1,16 +1,25 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.ifpb.pweb2.HermesWallet.models.Conta;
+import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.models.TipoConta;
+import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
+import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -18,8 +27,39 @@ import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
 @RequestMapping("/conta")
 public class ContaController {
 
+	
+    @Autowired
+    ContaRepository contaRepository;
+    
+    
     @Autowired
     ContaService _contaService;
+    
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    public ModelAndView busque(@PathVariable("id") Long id, ModelAndView model, HttpSession session, RedirectAttributes attr ) {
+    	   try {
+    	        Optional<Conta> c = contaRepository.findById(id);
+    	        
+    	        if (c.isPresent()) {
+    	            model.addObject("conta", c.get());
+    	            model.addObject("tiposConta", TipoConta.values()); //  isso evita erro no <select>
+    	            attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
+    	            model.setViewName("conta/formulario");
+    	        } else {
+    	            attr.addFlashAttribute("msg", "Conta não encontrada!");
+    	            model.setViewName("redirect:/conta/list"); // ou onde quiser redirecionar
+    	        }
+    	    } catch (Exception e) {
+    	        attr.addFlashAttribute("msg", "Conta Não Acessada!");
+    	        attr.addFlashAttribute("erro", e.getMessage());
+    	        model.setViewName("redirect:/conta/list");
+    	    }
+
+    	    return model;
+    	 
+    }
+    
+    
 
     @GetMapping("form")
     public ModelAndView createForm(ModelAndView model) {
@@ -39,7 +79,7 @@ public class ContaController {
     @PostMapping("save")
     public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr) {
     	try {
-    	attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
+    	attr.addFlashAttribute("msg", "Conta inserida com sucesso!");
         model.addObject("correntista", _contaService.createConta(conta).getCorrentista());
         model.setViewName("redirect:/conta/form");
     	} catch (Exception e) {

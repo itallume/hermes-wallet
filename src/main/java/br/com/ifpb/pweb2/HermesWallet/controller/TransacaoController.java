@@ -52,11 +52,7 @@ public class TransacaoController {
         Conta conta = c.get();
         Correntista correntista = (Correntista) session.getAttribute("correntista");
 
-        if (conta.getCorrentista().getId() != correntista.getId() ){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
-            return model;
-        }
+
 
         try{
             transacaoService.save(transacao);

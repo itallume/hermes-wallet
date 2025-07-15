@@ -17,13 +17,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="conta : ${contas}">
+            <tr th:each="conta : ${contas} ">
+
                 <td>[[${conta.id}]]</td>
                 <td>[[${conta.descricao}]]</td>
                 <td>[[${conta.numero}]]</td>
                 <td>[[${conta.diaFechamento}]]</td>
                 <td>[[${conta.tipo}]]</td>
-
+				
             </tr>
         </tbody>
     </table>

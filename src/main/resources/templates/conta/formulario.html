@@ -3,11 +3,14 @@
     layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
 <body>
     <div layout:fragment="content">
-    <h1>Cadastro de contas</h1>
+    <h1 th:if="${conta == null}">Cadastro de contas</h1>
+	<h1 th:if="${conta != null}">Edição da conta <span th:text="${conta.id}"></span></h1>
 
     <form method="POST" th:action="@{/conta/save}"  th:object="${conta}">
 
 		<div style='color: blue'>[[${msg}]]</div>
+		
+		
         <input type="hidden" th:field="*{id}"/><br>
         Descrição: <input type="text" th:field="*{descricao}"/><br>
         Número: <input type="text" th:field="*{numero}"/><br>
