@@ -2,26 +2,30 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
     layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
 <body>
-    <div layout:fragment="content">
-<h1>Cadastro de Transação</h1>
+        <div layout:fragment="content">
+    <h1>Cadastro de Transação</h1>
 
-<div th:text="${mensagem}" style="color: green;"></div>
+    <div th:text="${mensagem}" style="color: green;"></div>
 
-<form th:action="@{/conta/{contaId}/transacao(contaId=${transacao.conta.id})}" method="POST" th:object="${transacao}">
-    <input type="hidden" th:field="*{id}" />
+        <form method="POST" th:action="@{'/conta/' + *{conta.id} + '/transacoes'}"  th:object="${transacao}">
 
-    Data: <input type="date" th:field="*{data}" required /><br /><br />
-    Descrição: <input type="text" th:field="*{descricao}" required /><br /><br />
-    Valor: <input type="number" step="0.01" th:field="*{valor}" required /><br /><br />
-    Comentário: <textarea th:field="*{comentario}"></textarea><br /><br />
-    Categoria:
-    <select th:field="*{categoria.id}" required>
-        <option th:each="cat : ${categorias}" th:value="${cat.id}" th:text="${cat.nome}"></option>
-    </select><br /><br />
+            <input type="hidden" th:field="*{id}" />
 
-    <input type="submit" value="Salvar" />
-</form>
-</div>
+            <input type="hidden" th:field="*{conta.id}" />
+
+<!--            Data: <input type="date" th:field="*{data}" required /><br /><br />-->
+            Descrição: <input type="text" th:field="*{descricao}" required /><br /><br />
+            Valor: <input type="number" step="0.01" th:field="*{valor}" required /><br /><br />
+            Comentário: <textarea th:field="*{comentario}"></textarea><br /><br />
+            Categoria:
+            <select th:field="*{categoria}" required>
+                <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
+            </select><br /><br />
+
+            <input type="submit" value="Salvar" />
+        </form>
+
+    </div>
 </body>
 
 </html>
