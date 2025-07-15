@@ -14,17 +14,29 @@ public class AutenticacaoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        boolean permicao = false;
         HttpSession session = request.getSession(false);
 
-        if (session != null && ((Correntista) session.getAttribute("usuario") != null)){
-            permicao = true;
+        if (session != null){
+            Correntista usuario = (Correntista) session.getAttribute("usuario");
+
+            if (usuario != null){
+                String basePath = request.getContextPath();
+                String requestPath = request.getRequestURI();
+
+                String relativePath = requestPath.substring(basePath.length());
+
+                boolean requerAdmin = relativePath.startsWith("/correntista");
+
+                if (requerAdmin && !usuario.isAdmin()){
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Acesso negado.");
+                    return false;
+                }
+                return true;
+            }
+
         }
-        else {
-            String baseUrl = request.getContextPath();
-            response.sendRedirect(response.encodeRedirectURL(baseUrl));
-            permicao = false;
-        }
-        return permicao;
+        String baseUrl = request.getContextPath();
+        response.sendRedirect(response.encodeRedirectURL(baseUrl) + "/login");
+        return false;
     }
 }
