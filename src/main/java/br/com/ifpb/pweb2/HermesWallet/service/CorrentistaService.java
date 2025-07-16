@@ -1,6 +1,7 @@
 package br.com.ifpb.pweb2.HermesWallet.service;
 
 import br.com.caelum.stella.validation.CPFValidator;
+import br.com.caelum.stella.validation.InvalidStateException;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.repository.CorrentistaRepository;
 import br.com.ifpb.pweb2.HermesWallet.util.SenhaUtil;
@@ -17,8 +18,10 @@ public class CorrentistaService {
 
     public Correntista save(Correntista correntista) throws Exception {
         if (!correntista.isAdmin()){
-            CPFValidator validadorCpf = new CPFValidator();
-            if (!validadorCpf.isEligible(correntista.getCpf())){
+            try{
+                CPFValidator validadorCpf = new CPFValidator();
+                validadorCpf.assertValid(correntista.getCpf());
+            }catch (InvalidStateException e){
                 throw new Exception("CPF inválido");
             }
         }

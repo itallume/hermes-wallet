@@ -42,7 +42,7 @@ public class AutenticacaoController {
             Correntista correntista = this.obterCorrentistaPeloLogin(loginDTO);
             this.verificaCorrentista(loginDTO.senha(), correntista);
             session.setAttribute("usuario", correntista);
-            String destino = correntista.isAdmin() ? "redirect:/correntista" : "redirect:/conta/list";
+            String destino = correntista.isAdmin() ? "redirect:/correntista/list" : "redirect:/conta/list";
             model.setViewName(destino);
             return model;
         } catch (LoginOuSenhaInvalidos e) {
