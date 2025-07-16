@@ -4,21 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/9.1.0/mdb.min.css" rel="stylesheet"/>
     <title>Login</title>
+    <style>
+        .bg-image-vertical {
+            position: relative;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-position: right center;
+            background-size: auto 100%;
+        }
+
+        @media (min-width: 1025px) {
+            .h-custom-2 {
+            height: 100%;
+        }
+        }
+    </style>
 </head>
 <body>
-    <p th:text="${msg}"></p>
-    <p th:text="${erro}"></p>
-    <form th:action="@{/login}" method="post" th:object="${loginDTO}">
-        <label>CPF ou Email:</label>
-        <input type="text" th:field="*{login}">
-        <small class="text-danger" th:text="${erroLogin}"></small>
-        <label>Senha:</label>
-        <input type="password" th:field="*{senha}">
-        <small class="text-danger" th:text="${erroSenha}"></small>
-        <input type="submit" value="Entrar">
-    </form>
+<!--    <form th:action="@{/login}" method="post" th:object="${loginDTO}" style="width: 23rem;">-->
+<!--        <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>-->
 
+<!--        <div data-mdb-input-init class="form-outline mb-4">-->
+<!--            <input type="text" th:field="*{login}" class="form-control form-control-lg" id="login">-->
+<!--            <label for="login" class="form-label">CPF ou Email:</label>-->
+<!--            <small class="text-danger" th:text="${erroLogin}"></small>-->
+<!--        </div>-->
+<!--        <div data-mdb-input-init class="form-outline mb-4">-->
+<!--            <input type="password" th:field="*{senha}" class="form-control form-control-lg" id="senha">-->
+<!--            <label for="senha" class="form-label">Senha:</label>-->
+<!--            <small class="text-danger" th:text="${erroSenha}"></small>-->
+<!--        </div>-->
+
+<!--        <div class="pt-1 mb-4">-->
+<!--            <input data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" type="submit" value="Entrar">-->
+<!--        </div>-->
+<!--        -->
+<!--    </form>-->
+<section class="vh-100">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- Lado da imagem -->
+            <div class="col-sm-6 px-0 d-none d-sm-block">
+                <img th:src="@{/imagens/hermes.png}"
+                     alt="Login image"
+                     class="w-100 vh-100"
+                     style="object-fit: cover; object-position: center;">
+            </div>
+
+            <!-- Lado do formulário -->
+            <div class="col-sm-6 d-flex flex-column justify-content-center align-items-center" style="background-color: #94b2c5; color: white;">
+            <!-- Card -->
+                <div class="card shadow w-100" style="max-width: 500px;">
+                    <div class="card-body p-5">
+
+                        <!-- Logo -->
+                        <div class="mb-4 text-center">
+                            <img th:src="@{/imagens/hermes_logo.png}" alt="Logo"
+                                 style="width: 100px; height: 100px; object-fit: cover;">
+                            <h1 class="fw-bold text-center" style="color: #05213d; letter-spacing: 1px;">
+                                Hermes Wallet
+                            </h1>
+                        </div>
+
+                        <!-- Mensagens -->
+                        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${erro}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                        </div>
+
+                        <!-- Formulário -->
+                        <form th:action="@{/login}" method="post" th:object="${login}">
+                            <h3 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing:1px;">Login</h3>
+
+                            <div class="mb-4">
+                                <label for="login" class="form-label">CPF ou Email:</label>
+                                <input type="text" th:field="*{login}" class="form-control form-control-lg" id="login" placeholder="Digite um email ou CPF">
+                                <small class="text-danger" th:text="${erroLogin}"></small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="senha" class="form-label">Senha:</label>
+                                <input type="password" th:field="*{senha}" class="form-control form-control-lg" id="senha" placeholder="Digite sua senha">
+                                <small class="text-danger" th:text="${erroSenha}"></small>
+                            </div>
+
+                            <div class="pt-1 mb-4">
+                                <input class="btn btn-info btn-lg w-100" style="background-color: #05213d;" type="submit" value="Entrar">
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/9.1.0/mdb.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 </body>
 </html>
