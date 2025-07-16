@@ -11,18 +11,22 @@
 			<div class="form-group">
                 <label>Nome:</label>
                 <input class="form-control" type="text" th:field="*{nome}">
+                <small class="text-danger" th:text="${erroNome}"></small>
             </div>
             <div class="form-group">
                 <label>CPF:</label>
                 <input class="form-control" type="text" th:field="*{cpf}">
+                <small class="text-danger" th:text="${erroCPF}"></small>
             </div>
             <div class="form-group">
                 <label>Email:</label>
                 <input class="form-control" type="email" th:field="*{email}">
+                <small class="text-danger" th:text="${erroEmail}"></small>
             </div>
             <div class="form-group">
                 <label>senha:</label>
                 <input class="form-control" type="password" th:field="*{senha}">
+                <small class="text-danger" th:text="${erroSenha}"></small>
             </div>
             <div class="form-group form-check">
                 <label>Administrador?</label>
