@@ -4,7 +4,9 @@ import br.com.ifpb.pweb2.HermesWallet.DTO.LoginDTO;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.DadosLoginInvalido;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.LoginOuSenhaInvalidos;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.SenhaInvalida;
+import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
+import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.CorrentistaRepository;
 import br.com.ifpb.pweb2.HermesWallet.util.SenhaUtil;
 
@@ -24,6 +26,13 @@ public class AuthService {
         if (!SenhaUtil.verificarSenha(senhaDigitada, correntista.getSenha())) {
             throw new LoginOuSenhaInvalidos("Login ou Senha inválidos");
         }
+    }
+
+    public boolean verificarPermissaoConta(Correntista correntista,  Conta conta){
+        if(correntista.getId()!= conta.getCorrentista().getId()){
+            return false;
+        }
+        return true;
     }
 
     public Correntista obterCorrentistaPeloLogin(LoginDTO l)
