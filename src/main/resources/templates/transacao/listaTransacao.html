@@ -3,45 +3,115 @@
       layout:decorate="~{layout/layout}" th:with="titulo='Listagem de Transações'">
 <body>
 <div layout:fragment="content">
-
-    <h2 th:text="${mensagem}"></h2>
-
-    <div class="container mt-4">
-
-        <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" class="mb-3">
-            <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
-        </form>
-
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover align-middle text-center">
-                <thead class="table-light">
-                <th>ID</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Data</th>
-                <th>Categoria</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:data-transacao-id="${transacao.id}"
-                    th:data-conta-id="${idConta}"
-                    th:each="transacao : ${transacoes}"
-                    onclick="window.location.href = '/conta/' + this.dataset.contaId + '/transacoes/' + this.dataset.transacaoId"
-                    style="cursor: pointer">
-
-                    <td th:text="${transacao.id}"></td>
-                    <td th:text="${transacao.descricao}"></td>
-                    <td th:text="${transacao.valor}"></td>
-
-                    <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
-
-                    <td th:text="${transacao.categoria}"></td>
-                </tr>
-
-                </tbody>
-            </table>
+    <div style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); padding: 2rem 0; margin-bottom: 2rem;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;">Transações da Conta</h1>
+                    <p style="color: #e2e8f0; margin-bottom: 0;">Visualize e gerencie todas as transações financeiras</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" style="display: inline;">
+                            <button class="btn btn-warning btn-lg px-4" type="submit" 
+                                    style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600; 
+                                           box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-plus me-2"></i>Nova Transação
+                            </button>
+                        </form>
+                        <a th:href="@{/conta/list}" class="btn btn-outline-light btn-lg px-3" 
+                           style="border-color: #e2e8f0; color: #e2e8f0; font-weight: 500;"
+                           onmouseover="this.style.backgroundColor='#e2e8f0'; this.style.color='#1a365d';"
+                           onmouseout="this.style.backgroundColor='transparent'; this.style.color='#e2e8f0';">
+                            <i class="fas fa-arrow-left me-1"></i>Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- Message Alert -->
+    <div class="container" th:if="${mensagem}">
+        <div class="alert alert-info" 
+             style="background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%); 
+                    border: 1px solid #2c5282; color: #1a365d; border-radius: 8px;">
+            <h5 th:text="${mensagem}" style="margin: 0; font-weight: 500;"></h5>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mb-5">
+        <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+            <div class="card-header" 
+                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
+                        border-radius: 12px 12px 0 0; padding: 1.5rem;">
+                <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
+                    <i class="fas fa-list me-2"></i>Histórico de Transações
+                </h4>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center mb-0">
+                        <thead style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);">
+                            <tr>
+                                <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                    ID
+                                </th>
+                                <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                    Descrição
+                                </th>
+                                <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                    Valor
+                                </th>
+                                <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                    Data
+                                </th>
+                                <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                    Categoria
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:data-transacao-id="${transacao.id}"
+                                th:data-conta-id="${idConta}"
+                                th:each="transacao : ${transacoes}">
+                                <td style="padding: 1rem; color: #2c5282; font-weight: 500;" th:text="${transacao.id}"></td>
+                                
+                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;" th:text="${transacao.descricao}"></td>
+                                
+                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;" th:text="${transacao.valor}"></td>
+
+                                <td style="padding: 1rem; color: #4a5568;" th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
+
+                                <td style="padding: 1rem;">
+                                    <span class="badge" 
+                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%); 
+                                                 color: white; padding: 0.4rem 0.8rem; border-radius: 15px;"
+                                          th:text="${transacao.categoria}"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(transacoes)}" class="text-center py-5">
+            <div style="color: #a0aec0; font-size: 4rem; margin-bottom: 1rem;">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h3 style="color: #4a5568; font-weight: 600;">Nenhuma transação encontrada</h3>
+            <p style="color: #a0aec0; margin-bottom: 2rem;">Comece adicionando a primeira transação para esta conta</p>
+            <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" style="display: inline;">
+                <button class="btn btn-warning btn-lg px-4" type="submit" 
+                        style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Adicionar Primeira Transação
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
