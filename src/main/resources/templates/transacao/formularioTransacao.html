@@ -1,44 +1,65 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
+      layout:decorate="~{layout/layout}" th:with="titulo='Cadastro de Transação'">
 <body>
-        <div layout:fragment="content">
-    <h1>Cadastro de Transação</h1>
+<div layout:fragment="content">
 
-    <div th:text="${mensagem}" style="color: green;"></div>
-
-        <form method="POST" th:action="@{'/conta/' + *{conta.id} + '/transacoes'}"  th:object="${transacao}">
-
-
-            <input type="hidden" th:field="*{id}" />
-            <input type="hidden" th:field="*{conta.id}" />
-
-            <div class="form-group">
-                <label>Descrição:</label>
-                <input type="text" class="form-group" th:field="*{descricao}" required >
-                <small class="text-danger" th:text="${erroDescricao}"></small>
+    <div class="container my-5 d-flex justify-content-center">
+        <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
+            <div class="card-header text-white text-center" style="background-color: #c59d34;">
+                <h4>Cadastro de Transação</h4>
             </div>
-            <div class="form-group">
-                <label>Valor:</label>
-                <input type="number" class="form-group" step="0.01" th:field="*{valor}" required  >
-                <small class="text-danger" th:text="${erroValor}"></small>
-            </div>
-            <div class="form-group">
-                <label>Comentário:</label>
-                <textarea th:field="*{comentario}"></textarea>
-                <small class="text-danger" th:text="${erroComentario}"></small>
-            </div>
-            <div class="form-group">
-                <label>Categoria:</label>
-                <select class="form-group" th:field="*{categoria}" required>
-                    <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
-                </select>
-                <small class="text-danger" th:text="${erroCategoria}"></small>
-            </div>
-            <input type="submit" value="Salvar" />
-        </form>
+            <div class="card-body">
 
+
+                <form method="POST" th:action="@{'/conta/' + *{conta.id} + '/transacoes'}" th:object="${transacao}">
+
+                    <div th:if="${mensagem}" class="alert alert-success text-center" role="alert">
+                        [[${mensagem}]]
+                    </div>
+
+
+                    <input type="hidden" th:field="*{id}"/>
+                    <input type="hidden" th:field="*{conta.id}"/>
+
+
+                    <div class="mb-3">
+                        <label class="form-label">Descrição:</label>
+                        <input class="form-control" type="text" th:field="*{descricao}" required>
+                        <small class="text-danger" th:text="${erroDescricao}"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Valor:</label>
+                        <input class="form-control" type="number" th:field="*{valor}" required>
+                        <small class="text-danger" th:text="${erroValor}"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Comentário:</label>
+                        <input class="form-control" type="text" th:field="*{comentario}">
+                        <small class="text-danger" th:text="${erroComentario}"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Categoria:</label>
+                        <select class="form-group" th:field="*{categoria}" required>
+                            <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
+                        </select>
+                        <small class="text-danger" th:text="${erroCategoria}"></small>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success" style="background-color: #05213d;"
+                                th:text="Salvar"></button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
+</div>
+
 </body>
 
 </html>
