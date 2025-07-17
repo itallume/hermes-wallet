@@ -8,8 +8,7 @@
     <div class="container my-5 d-flex justify-content-center">
         <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
             <div class="card-header text-white text-center" style="background-color: #c59d34;">
-                <h4 th:if="${conta != null}">Cadastro de Conta</h4>
-                <h4 th:if="${conta == null}">Edição da conta <span th:text="${conta.id}"></span></h4>
+                <h4 th:text="${conta.id != null} ? 'Edição da conta ' + ${conta.id} : 'Cadastro de Conta'"></h4>
             </div>
             <div class="card-body">
 
