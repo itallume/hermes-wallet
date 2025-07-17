@@ -1,5 +1,8 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
 import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.models.TipoCategoria;
@@ -60,7 +63,7 @@ public class TransacaoController {
         }
 
         Conta conta = c.get();
-        Correntista correntista = (Correntista) session.getAttribute("correntista");
+        Correntista correntista = (Correntista) session.getAttribute("usuario");
 
         if (conta.getCorrentista().getId() != correntista.getId() ){
             attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
@@ -68,14 +71,29 @@ public class TransacaoController {
             return model;
         }
 
-        try{
+
+        try {
             transacaoService.save(transacao);
             attr.addFlashAttribute("mensagem", "Transacao criada com sucesso!");
             model.setViewName("redirect:/conta/" + id + "/transacoes");
+        } catch (ErroCategoria e) {
+            attr.addFlashAttribute("erroCategoria", e.getMessage());
+            //model.addObject("erroCategoria", e.getMessage());
+        } catch  (ErroDescricao e){
+            attr.addFlashAttribute("erroDescricao", e.getMessage());
+            //model.addObject("erroDescricao", e.getMessage());
+        } catch (ErroValor e){
+            attr.addFlashAttribute("erroValor", e.getMessage());
+            //model.addObject("erroValor", e.getMessage());
         } catch (Exception e) {
-            attr.addFlashAttribute("erro", e.getMessage());
-            model.setViewName("redirect:/correntista/form");
+            attr.addFlashAttribute("erro", "Erro inesperado");
         }
+
+        if (model.getViewName() == null) {
+            model.setViewName("redirect:/conta/" + id + "/transacoes/form");
+        }
+
+        attr.addFlashAttribute("transacao", transacao);
         return model;
     }
 

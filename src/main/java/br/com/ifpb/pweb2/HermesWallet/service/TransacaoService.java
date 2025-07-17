@@ -1,5 +1,8 @@
 package br.com.ifpb.pweb2.HermesWallet.service;
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
 import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
@@ -22,8 +25,19 @@ public class TransacaoService {
     private ContaRepository _contaRepository;
 
     @Transactional
-    public Transacao save(Transacao novaTransacao){
+    public Transacao save(Transacao novaTransacao) throws ErroCategoria, ErroDescricao, ErroValor {
         novaTransacao.setData(Instant.now());
+
+        if (novaTransacao.getDescricao() == null || novaTransacao.getDescricao().isBlank()){
+            throw new ErroDescricao("Descrição não pode ser vazio");
+        }
+        if (novaTransacao.getValor() < 0 || novaTransacao.getValor() == 0.0){
+            throw new ErroValor("Valor de transação inválido");
+        }
+        if (novaTransacao.getCategoria() == null || novaTransacao.getCategoria().name().isBlank()){
+            throw new ErroCategoria("Categoria inválida");
+        }
+
         return _transacaoRepository.save(novaTransacao);
     }
 

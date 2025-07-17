@@ -9,19 +9,32 @@
 
         <form method="POST" th:action="@{'/conta/' + *{conta.id} + '/transacoes'}"  th:object="${transacao}">
 
-            <input type="hidden" th:field="*{id}" />
 
+            <input type="hidden" th:field="*{id}" />
             <input type="hidden" th:field="*{conta.id}" />
 
-<!--            Data: <input type="date" th:field="*{data}" required /><br /><br />-->
-            Descrição: <input type="text" th:field="*{descricao}" required /><br /><br />
-            Valor: <input type="number" step="0.01" th:field="*{valor}" required /><br /><br />
-            Comentário: <textarea th:field="*{comentario}"></textarea><br /><br />
-            Categoria:
-            <select th:field="*{categoria}" required>
-                <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
-            </select><br /><br />
-
+            <div class="form-group">
+                <label>Descrição:</label>
+                <input type="text" class="form-group" th:field="*{descricao}" required >
+                <small class="text-danger" th:text="${erroDescricao}"></small>
+            </div>
+            <div class="form-group">
+                <label>Valor:</label>
+                <input type="number" class="form-group" step="0.01" th:field="*{valor}" required  >
+                <small class="text-danger" th:text="${erroValor}"></small>
+            </div>
+            <div class="form-group">
+                <label>Comentário:</label>
+                <textarea th:field="*{comentario}"></textarea>
+                <small class="text-danger" th:text="${erroComentario}"></small>
+            </div>
+            <div class="form-group">
+                <label>Categoria:</label>
+                <select class="form-group" th:field="*{categoria}" required>
+                    <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
+                </select>
+                <small class="text-danger" th:text="${erroCategoria}"></small>
+            </div>
             <input type="submit" value="Salvar" />
         </form>
 
