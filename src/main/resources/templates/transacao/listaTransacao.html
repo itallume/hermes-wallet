@@ -1,37 +1,45 @@
 <!doctype html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorate="~{layout/layout}" th:with="titulo='Lista de Transações'">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}" th:with="titulo='Listagem de Transações'">
 <body>
 <div layout:fragment="content">
-    <h1>Lista de transações</h1>
 
-    <a th:href="@{'/conta/' + ${idConta} + '/transacoes/form'}">Nova Transação</a>
+    <h2 th:text="${mensagem}"></h2>
 
-    <table border="1">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Data</th>
-            <th>Categoria</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="transacao : ${transacoes}">
-            <td th:text="${transacao.id}"></td>
-            <td th:text="${transacao.descricao}"></td>
-            <td th:text="${transacao.valor}"></td>
+    <div class="container mt-4">
 
-            <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
+        <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" class="mb-3">
+            <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
+        </form>
 
-            <td th:text="${transacao.categoria}"></td>
-        </tr>
 
-        </tbody>
-    </table>
-</div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead class="table-light">
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Categoria</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="transacao : ${transacoes}"
+                    th:action="@{'/conta/' + ${idConta} + '/transacoes/form/' + ${transacao.id}}"
+                    style="cursor: pointer">
+
+                    <td th:text="${transacao.id}"></td>
+                    <td th:text="${transacao.descricao}"></td>
+                    <td th:text="${transacao.valor}"></td>
+
+                    <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td th:text="${transacao.categoria}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
 </body>
 </html>

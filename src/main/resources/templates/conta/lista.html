@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorate="~{layout/layout}" th:with="titulo='Listagem de Conta'">
+      layout:decorate="~{layout/layout}" th:with="titulo='Listagem de Conta'">
 <body>
 <div layout:fragment="content">
 
@@ -14,32 +14,32 @@
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover align-middle text-center">
-                    <thead class="table-light">
-                    <tr>
+                <thead class="table-light">
+                <tr>
                     <th>id</th>
                     <th>Descrição</th>
                     <th>Número</th>
                     <th>Dia de fechamento</th>
                     <th>Tipo de conta</th>
                     <th>Nome</th>
-                    </tr>
-            </thead>
-        <tbody>
+                </tr>
+                </thead>
 
-            <tr th:data-id="${conta.id}"
-                onclick="window.location.href = '/conta/' + this.dataset.id"
-                th:each="conta : ${contas}"
-                style="cursor: pointer">
 
-                <td>[[${conta.id}]]</td>
-                <td  th:text="${conta.descricao}"></td>
-                <td  th:text="${conta.numero}"></td>
-                <td  th:text="${conta.diaFechamento}"></td>
-                <td  th:text="${conta.tipo}"></td>
+                <tbody>
+                <tr th:data-id="${conta.id}"
+                    onclick="window.location.href = '/conta/' + this.dataset.id"
+                    th:each="conta : ${contas}"
+                    style="cursor: pointer">
 
-            </tr>
-        </tbody>
-    </table>
+                    <td>[[${conta.id}]]</td>
+                    <td th:text="${conta.descricao}"></td>
+                    <td th:text="${conta.numero}"></td>
+                    <td th:text="${conta.diaFechamento}"></td>
+                    <td th:text="${conta.tipo}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

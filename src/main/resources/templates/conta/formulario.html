@@ -14,7 +14,7 @@
 
 
                 <form   th:style="${conta.id == null} ? 'display: none' : 'display:flex'"
-                        th:action="@{/conta/{id}/transacoes/form(id=${conta.id})}" method="GET" class="mb-3">
+                        th:action="@{'/conta/' + ${conta.id} + '/transacoes/form'}" method="GET" class="mb-3">
                     <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
                 </form>
 
