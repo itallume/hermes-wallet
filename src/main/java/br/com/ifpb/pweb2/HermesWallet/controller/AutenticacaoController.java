@@ -46,13 +46,14 @@ public class AutenticacaoController {
             model.setViewName(destino);
             return model;
         } catch (LoginOuSenhaInvalidos e) {
-            attributes.addFlashAttribute("erro", e.getMessage());
+            model.addObject("erro", e.getMessage());
         } catch (SenhaInvalida e) {
-            attributes.addFlashAttribute("erroSenha", e.getMessage());
+            model.addObject("erroSenha", e.getMessage());
         } catch (DadosLoginInvalido e) {
-            attributes.addFlashAttribute("erroLogin", e.getMessage());
+            model.addObject("erroLogin", e.getMessage());
         }
-        model.setViewName("redirect:/login");
+        model.setViewName("/autenticacao/login");
+        model.addObject("login", loginDTO);
         return model;
     }
 
