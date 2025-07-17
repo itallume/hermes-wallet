@@ -6,23 +6,42 @@
 
     <h2 th:text="${mensagem}"></h2>
 
-    <form th:action="@{/correntista/form}" method="GET">
-        <button class="btn btn-primary" type="submit">Novo(+)</button>
-    </form>
+        <div class="container mt-4">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Nome</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="correntista : ${correntistas}">
-                <td>[[${correntista.id}]]</td>
-                <td th:text="${correntista.nome}"></td>
-            </tr>
-        </tbody>
-    </table>
+            <form th:action="@{/correntista/form}" method="GET" class="mb-3">
+                <button class="btn btn-primary" type="submit">Novo(+)</button>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Email</th>
+                        <th>Administrador?</th>
+                        <th>Contas</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="correntista : ${correntistas}">
+                        <td>[[${correntista.id}]]</td>
+                        <td th:text="${correntista.nome}"></td>
+                        <td th:text="${correntista.cpf}"></td>
+                        <td th:text="${correntista.email}"></td>
+                        <td th:text="${correntista.isAdmin}"></td>
+                        <td>
+                        <span th:each="conta, iterStat : ${correntista.contas}">
+                            <span th:text="${conta.id}"></span><span th:if="${!iterStat.last}">, </span>
+                        </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </body>
 </html>
