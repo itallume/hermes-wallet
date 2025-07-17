@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}" th:with="titulo='Dashboard'">
+<body>
+<div layout:fragment="content">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Lista de Contas -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Minhas Contas</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <a th:each="conta : ${contas}" 
+                               th:href="@{/dashboard(contaId=${conta.id})}"
+                               th:class="${contaSelecionada != null and contaSelecionada.id == conta.id} ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1" th:text="${conta.descricao}"></h6>
+                                    <small th:text="${conta.tipo}"></small>
+                                </div>
+                                <p class="mb-1" th:text="'Número: ' + ${conta.numero}"></p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Transações -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 th:text="${contaSelecionada != null} ? 'Transações da ' + ${contaSelecionada.descricao} : 'Selecione uma conta'"></h5>
+                        <a th:if="${contaSelecionada != null}" 
+                           th:href="@{'/conta/' + ${contaSelecionada.id} + '/transacoes/form'}" 
+                           class="btn btn-primary">
+                            Nova Transação (+)
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${contaSelecionada == null}">
+                            <p class="text-muted text-center">Selecione uma conta para visualizar as transações</p>
+                        </div>
+                        <div th:if="${contaSelecionada != null}">
+                            <div th:if="${#lists.isEmpty(transacoes)}">
+                                <p class="text-muted">Nenhuma transação encontrada</p>
+                            </div>
+                            <div th:if="${!#lists.isEmpty(transacoes)}" class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Descrição</th>
+                                            <th>Valor</th>
+                                            <th>Data</th>
+                                            <th>Categoria</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="transacao : ${transacoes}"
+                                            th:onclick="'window.location.href=\'/conta/' + ${contaSelecionada.id} + '/transacoes/' + ${transacao.id} + '\''"
+                                            style="cursor: pointer">
+                                            <td th:text="${transacao.descricao}"></td>
+                                            <td th:text="'R$ ' + ${#numbers.formatDecimal(transacao.valor, 1, 2)}"></td>
+                                            <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy')}"></td>
+                                            <td th:text="${transacao.categoria}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
