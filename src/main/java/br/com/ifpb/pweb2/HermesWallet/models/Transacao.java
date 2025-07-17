@@ -19,6 +19,7 @@ public class Transacao {
     private double valor;
     private String comentario;
     @ManyToOne
+    @JoinColumn(name = "conta_id")
     private Conta conta;
 //    @ManyToOne
 //    private Categoria categoria;

@@ -20,10 +20,11 @@ public class Conta {
     @Enumerated(EnumType.STRING)
     private TipoConta tipo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "correntista_id")  // explicita a coluna FK
     private Correntista correntista;
 
-    @OneToMany
+    @OneToMany (mappedBy = "conta", cascade = CascadeType.ALL)
     private List<Transacao> transaction;
     //TODO correntistas
 }

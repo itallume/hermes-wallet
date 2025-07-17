@@ -21,6 +21,6 @@ public class Correntista {
     private String email;
     private String senha;
     private boolean admin;
-    @OneToMany
+    @OneToMany(mappedBy = "correntista", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Conta> contas;
 }

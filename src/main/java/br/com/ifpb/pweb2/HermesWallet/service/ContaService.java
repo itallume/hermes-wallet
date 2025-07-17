@@ -23,13 +23,17 @@ public class ContaService {
 
     //TODO remover gambiarra do correntista
     @Transactional
-    public Conta createConta(Conta contaNova){
-        Optional<Correntista> c = _correntistaRepository.findById(1233L);
-        if(c.isPresent()){
-            contaNova.setCorrentista(c.get());
-        }
+    public Conta createConta(Conta contaNova, Correntista correntista){
+        contaNova.setCorrentista(correntista);
         return _contaRepository.save(contaNova);
     }
+//    public Conta createConta(Conta contaNova){
+//        Optional<Correntista> c = _correntistaRepository.findById(1233L);
+//        if(c.isPresent()){
+//            contaNova.setCorrentista(c.get());
+//        }
+//        return _contaRepository.save(contaNova);
+//    }
 
     @Transactional
     public List<Conta> getContas() {

@@ -73,13 +73,15 @@ public class ContaController {
         model.setViewName("conta/lista");
         return model;
     }
-
+//criar conta agora passa correntista
     @PostMapping("save")
-    public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr) {
-    	try {
+    public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr, HttpSession session) {
+        Correntista correntista = (Correntista) session.getAttribute("usuario");
+        //faz um teste se tem esse user lauro
+        try {
     	attr.addFlashAttribute("msg", "Conta inserida com sucesso!");
-        model.addObject("correntista", _contaService.createConta(conta).getCorrentista());
-        model.setViewName("redirect:/conta/form");
+        _contaService.createConta(conta,correntista);
+        model.setViewName("redirect:/conta/list");
     	} catch (Exception e) {
     		attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/conta/form");
