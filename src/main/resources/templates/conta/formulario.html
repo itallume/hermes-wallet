@@ -1,66 +1,136 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro de Conta'">
+      layout:decorate="~{layout/layout}" th:with="titulo='Cadastro de Conta'">
 <body>
-
-<div layout:fragment="content">
-
-    <div class="container my-5 d-flex justify-content-center">
-        <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
-            <div class="card-header text-white text-center" style="background-color: #c59d34;">
-                <h4 th:text="${conta.id != null} ? 'Edição da conta ' + ${conta.id} : 'Cadastro de Conta'"></h4>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <div style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); padding: 2rem 0; margin-bottom: 2rem;">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;" 
+                            th:text="${conta.id != null} ? 'Edição de Conta' : 'Cadastro de Conta'">Cadastro de Conta</h1>
+                        <p style="color: #e2e8f0; margin-bottom: 0;" 
+                           th:text="${conta.id != null} ? 'Atualize os dados da conta selecionada' : 'Adicione uma nova conta ao sistema'">
+                           Adicione uma nova conta ao sistema
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a th:href="@{/conta/list}" class="btn btn-outline-light btn-lg px-4" 
+                           style="border-color: #ffd700; color: #ffd700; font-weight: 600;" 
+                           onmouseover="this.style.backgroundColor='#ffd700'; this.style.color='#1a365d';"
+                           onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ffd700';">
+                            <i class="fas fa-arrow-left me-2"></i>Voltar à Lista
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-
-
-                <form   th:style="${conta.id == null} ? 'display: none' : 'display:flex'"
-                        th:action="@{'/conta/' + ${conta.id} + '/transacoes/form'}" method="GET" class="mb-3">
-                    <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
-                </form>
-
-    <form method="POST" th:action="@{/conta/save}"  th:object="${conta}">
-
-        <div th:if="${msg}" class="alert alert-success text-center" role="alert">
-            [[${msg}]]
         </div>
 
-        <input type="hidden" th:field="*{id}"/><br>
+        <!-- Main Content -->
+        <div class="container my-5 d-flex justify-content-center">
+            <div class="card shadow-lg" style="width: 100%; max-width: 600px; border: none; border-radius: 12px;">
+                
+                <!-- Card Header -->
+                <div class="card-header text-center" 
+                     style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
+                            border-radius: 12px 12px 0 0; padding: 1.5rem;">
+                    <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
+                        <i class="fas fa-credit-card me-2"></i>
+                        <span th:text="${conta.id != null} ? 'Editar Conta' : 'Nova Conta'">Nova Conta</span>
+                    </h4>
+                    <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                        <span th:text="${conta.id != null} ? 'Modifique os dados conforme necessário' : 'Preencha os dados da nova conta'">
+                            Preencha os dados da nova conta
+                        </span>
+                    </p>
+                </div>
 
-        <div class="mb-3">
-            <label class="form-label">Descrição:</label>
-            <input class="form-control" type="text" th:field="*{descricao}">
-<!--            <small class="text-danger" th:text="${erroNome}"></small>-->
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Numero:</label>
-            <input class="form-control" type="number" th:field="*{numero}">
-<!--            <small class="text-danger" th:text="${numero}"></small>-->
-        </div>
+                <!-- Card Body -->
+                <div class="card-body" style="padding: 2rem; background: #f7fafc;">
+                    
+                    <div th:if="${msg}" class="alert alert-success text-center mb-4" 
+                         style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); 
+                                border: 1px solid #28a745; color: #155724; border-radius: 8px;">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${msg}"></span>
+                    </div>
 
 
-        <div class="mb-3">
-            <label class="form-label">Dia de Fechamento:</label>
-            <input class="form-control" type="date" th:field="*{diaFechamento}">
-<!--            <small class="text-danger" th:text="${erroNome}"></small>-->
-        </div>
+                    <form method="POST" th:action="@{/conta/save}" th:object="${conta}">
+                        
+                        <input type="hidden" th:field="*{id}">
 
+                        <div class="mb-4">
+                            <label class="form-label" style="color: #1a365d; font-weight: 600;">
+                                <i class="fas fa-file-alt me-2"></i>Descrição:
+                            </label>
+                            <input class="form-control form-control-lg" type="text" th:field="*{descricao}" 
+                                   style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                   onfocus="this.style.borderColor='#2c5282'"
+                                   onblur="this.style.borderColor='#e2e8f0'"
+                                   placeholder="Ex: Conta Principal, Conta Poupança...">
+                        </div>
 
-        <div class="mb-3">
-            <label class="form-label">Tipo:</label>
-            <select th:field="*{tipo}">
-                <option th:each="tipo : ${tiposConta}" th:value="${tipo}" th:text="${tipo}"></option>
-            </select>
-            <!--            <small class="text-danger" th:text="${erroNome}"></small>-->
-        </div>
+                        <div class="mb-4">
+                            <label class="form-label" style="color: #1a365d; font-weight: 600;">
+                                <i class="fas fa-sort-numeric-up me-2"></i>Número da Conta:
+                            </label>
+                            <input class="form-control form-control-lg" type="number" th:field="*{numero}" 
+                                   style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                   onfocus="this.style.borderColor='#2c5282'"
+                                   onblur="this.style.borderColor='#e2e8f0'"
+                                   placeholder="Ex: 12345">
+                        </div>
 
-        <div class="d-grid">
-            <button type="submit" class="btn btn-success" style="background-color: #05213d;"
-                    th:text="${conta.id != null} ? 'Editar' : 'Criar'">
-            </button>
-        </div>
-    </form>
-	</div>
+                        <div class="mb-4">
+                            <label class="form-label" style="color: #1a365d; font-weight: 600;">
+                                <i class="fas fa-calendar-alt me-2"></i>Dia de Fechamento:
+                            </label>
+                            <input class="form-control form-control-lg" type="date" th:field="*{diaFechamento}" 
+                                   style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                   onfocus="this.style.borderColor='#2c5282'"
+                                   onblur="this.style.borderColor='#e2e8f0'">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" style="color: #1a365d; font-weight: 600;">
+                                <i class="fas fa-tag me-2"></i>Tipo de Conta:
+                            </label>
+                            <select class="form-select form-select-lg" th:field="*{tipo}"
+                                    style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                    onfocus="this.style.borderColor='#2c5282'"
+                                    onblur="this.style.borderColor='#e2e8f0'">
+                                <option value="">Selecione o tipo de conta</option>
+                                <option th:each="tipo : ${tiposConta}" th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <div class="d-grid">
+                                    <a th:href="@{/conta/list}" class="btn btn-outline-secondary btn-lg" 
+                                       style="border-color: #4a5568; color: #4a5568; border-radius: 8px;">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-lg" 
+                                            style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
+                                                   border: none; color: white; border-radius: 8px; font-weight: 600;
+                                                   box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);"
+                                            onmouseover="this.style.backgroundColor='#ffd700'; this.style.color='#ffd700';"
+                                            onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
+                                        <i th:class="${conta.id != null} ? 'fas fa-edit me-2' : 'fas fa-save me-2'"></i>
+                                        <span th:text="${conta.id != null} ? 'Atualizar Conta' : 'Salvar Conta'">Salvar Conta</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+            </div>
         </div>
     </div>
 </body>
