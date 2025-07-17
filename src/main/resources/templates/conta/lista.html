@@ -1,33 +1,47 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
+    layout:decorate="~{layout/layout}" th:with="titulo='Listagem de Conta'">
 <body>
-    <div layout:fragment="content">
-    <h1>Lista de contas</h1>
+<div layout:fragment="content">
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Descrição</th>
-                <th>Número</th>
-                <th>Dia de fechamento</th>
-                <th>Tipo de conta</th>
-                <th>Nome</th>
-            </tr>
-        </thead>
+    <h2 th:text="${mensagem}"></h2>
+
+    <div class="container mt-4">
+
+        <form th:action="@{/conta/form}" method="GET" class="mb-3">
+            <button class="btn btn-primary" type="submit">Novo(+)</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle text-center">
+                    <thead class="table-light">
+                    <tr>
+                    <th>id</th>
+                    <th>Descrição</th>
+                    <th>Número</th>
+                    <th>Dia de fechamento</th>
+                    <th>Tipo de conta</th>
+                    <th>Nome</th>
+                    </tr>
+            </thead>
         <tbody>
-            <tr th:each="conta : ${contas} ">
+
+            <tr th:data-id="${conta.id}"
+                onclick="window.location.href = '/conta/' + this.dataset.id"
+                th:each="conta : ${contas}"
+                style="cursor: pointer">
 
                 <td>[[${conta.id}]]</td>
-                <td>[[${conta.descricao}]]</td>
-                <td>[[${conta.numero}]]</td>
-                <td>[[${conta.diaFechamento}]]</td>
-                <td>[[${conta.tipo}]]</td>
-				
+                <td  th:text="${conta.descricao}"></td>
+                <td  th:text="${conta.numero}"></td>
+                <td  th:text="${conta.diaFechamento}"></td>
+                <td  th:text="${conta.tipo}"></td>
+
             </tr>
         </tbody>
     </table>
-
+        </div>
+    </div>
+</div>
 </body>
 </html>

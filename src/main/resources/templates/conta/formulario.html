@@ -1,27 +1,62 @@
 <!doctype html>
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro Correntista'">
+    layout:decorate="~{layout/layout}" th:with="titulo='Cadastro de Conta'">
 <body>
-    <div layout:fragment="content">
-    <h1 th:if="${conta == null}">Cadastro de contas</h1>
-	<h1 th:if="${conta != null}">Edição da conta <span th:text="${conta.id}"></span></h1>
+
+<div layout:fragment="content">
+
+    <div class="container my-5 d-flex justify-content-center">
+        <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
+            <div class="card-header text-white text-center" style="background-color: #c59d34;">
+                <h4 th:if="${conta != null}">Cadastro de Conta</h4>
+                <h4 th:if="${conta == null}">Edição da conta <span th:text="${conta.id}"></span></h4>
+            </div>
+            <div class="card-body">
+
+
 
     <form method="POST" th:action="@{/conta/save}"  th:object="${conta}">
 
-		<div style='color: blue'>[[${msg}]]</div>
-		
-		
+        <div th:if="${msg}" class="alert alert-success text-center" role="alert">
+            [[${msg}]]
+        </div>
+
         <input type="hidden" th:field="*{id}"/><br>
-        Descrição: <input type="text" th:field="*{descricao}"/><br>
-        Número: <input type="text" th:field="*{numero}"/><br>
-        Data de fechamento: <input type="date" th:field="*{diaFechamento}"/><br>
-        Tipo:
+
+        <div class="mb-3">
+            <label class="form-label">Descrição:</label>
+            <input class="form-control" type="text" th:field="*{descricao}">
+<!--            <small class="text-danger" th:text="${erroNome}"></small>-->
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Numero:</label>
+            <input class="form-control" type="text" th:field="*{numero}">
+<!--            <small class="text-danger" th:text="${numero}"></small>-->
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Dia de Fechamento:</label>
+            <input class="form-control" type="text" th:field="*{diaFechamento}">
+<!--            <small class="text-danger" th:text="${erroNome}"></small>-->
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Tipo:</label>
             <select th:field="*{tipo}">
                 <option th:each="tipo : ${tiposConta}" th:value="${tipo}" th:text="${tipo}"></option>
             </select>
-        <br>
-        <button type="submit">Criar</button>
+            <!--            <small class="text-danger" th:text="${erroNome}"></small>-->
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success" style="background-color: #05213d;">Criar</button>
+        </div>
     </form>
 	</div>
+        </div>
+    </div>
 </body>
 </html>
