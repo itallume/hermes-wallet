@@ -1,72 +1,195 @@
 <!doctype html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorate="~{layout/layout}" th:with="titulo='Dashboard'">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" layout:decorate="~{layout/layout}"
+    th:with="titulo='Dashboard'">
+
 <body>
-<div layout:fragment="content">
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- Lista de Contas -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Minhas Contas</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="list-group list-group-flush">
-                            <a th:each="conta : ${contas}" 
-                               th:href="@{/dashboard(contaId=${conta.id})}"
-                               th:class="${contaSelecionada != null and contaSelecionada.id == conta.id} ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1" th:text="${conta.descricao}"></h6>
-                                    <small th:text="${conta.tipo}"></small>
-                                </div>
-                                <p class="mb-1" th:text="'Número: ' + ${conta.numero}"></p>
-                            </a>
-                        </div>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <div style="
+          background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+          padding: 2rem 0;
+          margin-bottom: 2rem;
+        ">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem">
+                            Dashboard
+                        </h1>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Lista de Transações -->
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 th:text="${contaSelecionada != null} ? 'Transações da ' + ${contaSelecionada.descricao} : 'Selecione uma conta'"></h5>
-                        <a th:if="${contaSelecionada != null}" 
-                           th:href="@{'/conta/' + ${contaSelecionada.id} + '/transacoes/form'}" 
-                           class="btn btn-primary">
-                            Nova Transação (+)
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <div th:if="${contaSelecionada == null}">
-                            <p class="text-muted text-center">Selecione uma conta para visualizar as transações</p>
+        <div class="container-fluid mb-5">
+            <div class="row">
+                <!-- Lista de Contas -->
+                <div class="col-md-4 mb-4">
+                    <div class="card"
+                        style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); height: 100%;">
+                        <div class="card-header" style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
+                                border-radius: 12px 12px 0 0; padding: 1.5rem;">
+                            <h5 style="color: #ffd700; margin: 0; font-weight: 600;">
+                                <i class="fas fa-wallet me-2"></i>Minhas Contas
+                            </h5>
+                            <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                                Selecione uma conta para visualizar
+                            </p>
                         </div>
-                        <div th:if="${contaSelecionada != null}">
-                            <div th:if="${#lists.isEmpty(transacoes)}">
-                                <p class="text-muted">Nenhuma transação encontrada</p>
+                        <div class="card-body p-0" style="background: #f7fafc;">
+                            <div th:if="${#lists.isEmpty(contas)}" class="text-center py-5">
+                                <div style="color: #a0aec0; font-size: 3rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <h6 style="color: #4a5568; font-weight: 600;">Nenhuma conta encontrada</h6>
+                                <p style="color: #a0aec0; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                                    Crie sua primeira conta para começar
+                                </p>
+                                <a href="/conta/form" class="btn btn-sm"
+                                    style="background: #ffd700; border: none; color: #1a365d; font-weight: 600; border-radius: 6px;">
+                                    <i class="fas fa-plus me-1"></i>Criar Conta
+                                </a>
                             </div>
-                            <div th:if="${!#lists.isEmpty(transacoes)}" class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Descrição</th>
-                                            <th>Valor</th>
-                                            <th>Data</th>
-                                            <th>Categoria</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="transacao : ${transacoes}"
-                                            th:onclick="'window.location.href=\'/conta/' + ${contaSelecionada.id} + '/transacoes/' + ${transacao.id} + '\''"
-                                            style="cursor: pointer">
-                                            <td th:text="${transacao.descricao}"></td>
-                                            <td th:text="'R$ ' + ${#numbers.formatDecimal(transacao.valor, 1, 2)}"></td>
-                                            <td th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy')}"></td>
-                                            <td th:text="${transacao.categoria}"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                            <div th:unless="${#lists.isEmpty(contas)}" class="list-group list-group-flush">
+                                <a th:each="conta : ${contas}" th:href="@{/dashboard(contaId=${conta.id})}"
+                                    th:class="${contaSelecionada != null and contaSelecionada.id == conta.id} ? 'list-group-item list-group-item-action' : 'list-group-item list-group-item-action'"
+                                    th:style="${contaSelecionada != null and contaSelecionada.id == conta.id} ? 'background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); border: none; color: #1a365d;' : 'border: none; color: #4a5568;'"
+                                    style="transition: all 0.3s ease; padding: 1rem;"
+                                    onmouseover="if(!this.classList.contains('active')) { this.style.backgroundColor='#edf2f7'; this.style.color='#1a365d'; }"
+                                    onmouseout="if(!this.classList.contains('active')) { this.style.backgroundColor='transparent'; this.style.color='#4a5568'; }">
+
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1" style="font-weight: 600;" th:text="${conta.descricao}">
+                                            </h6>
+                                            <p class="mb-1" style="font-size: 0.9rem; opacity: 0.8;"
+                                                th:text="'Número: ' + ${conta.numero}"></p>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge"
+                                                th:style="${contaSelecionada != null and contaSelecionada.id == conta.id} ? 'background: #1a365d; color: white;' : 'background: #2c5282; color: white;'"
+                                                style="padding: 0.4rem 0.8rem; border-radius: 15px; font-size: 0.8rem;">
+                                                <i th:if="${conta.tipo == 'CORRENTE'}"
+                                                    class="fas fa-university me-1"></i>
+                                                <i th:if="${conta.tipo == 'POUPANCA'}"
+                                                    class="fas fa-piggy-bank me-1"></i>
+                                                <i th:if="${conta.tipo == 'CARTAO_CREDITO'}"
+                                                    class="fas fa-credit-card me-1"></i>
+                                                <i th:unless="${conta.tipo == 'CORRENTE' || conta.tipo == 'POUPANCA' || conta.tipo == 'CARTAO_CREDITO'}"
+                                                    class="fas fa-wallet me-1"></i>
+                                                <span th:text="${conta.tipo}"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Transações -->
+                <div class="col-md-8 mb-4">
+                    <div class="card"
+                        style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); height: 100%;">
+                        <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
+                                border-radius: 12px 12px 0 0; padding: 1.5rem;">
+                            <div>
+                                <h5 style="color: #ffd700; margin: 0; font-weight: 600;">
+                                    <i class="fas fa-exchange-alt me-2"></i>
+                                    <span
+                                        th:text="${contaSelecionada != null} ? 'Transações - ' + ${contaSelecionada.descricao} : 'Transações'"></span>
+                                </h5>
+                                <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;"
+                                    th:text="${contaSelecionada != null} ? 'Histórico de movimentações' : 'Selecione uma conta'">
+                                </p>
+                            </div>
+                            <a th:if="${contaSelecionada != null}"
+                                th:href="@{'/conta/' + ${contaSelecionada.id} + '/transacoes/form'}"
+                                class="btn btn-warning px-3"
+                                style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600; border-radius: 6px;">
+                                <i class="fas fa-plus me-1"></i>Nova Transação
+                            </a>
+                        </div>
+
+                        <div class="card-body" style="background: #f7fafc; min-height: 400px;">
+                            <!-- Estado quando nenhuma conta selecionada -->
+                            <div th:if="${contaSelecionada == null}" class="text-center py-5" style="margin-top: 3rem;">
+                                <div style="color: #a0aec0; font-size: 4rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-hand-point-left"></i>
+                                </div>
+                                <h4 style="color: #4a5568; font-weight: 600;">Selecione uma conta</h4>
+                                <p style="color: #a0aec0; margin-bottom: 0;">
+                                    Escolha uma conta na lista ao lado para visualizar suas transações
+                                </p>
+                            </div>
+
+                            <!-- Quando há conta selecionada -->
+                            <div th:if="${contaSelecionada != null}">
+                                <!-- Lista de transações -->
+                                <div th:if="${#lists.isEmpty(transacoes)}" class="text-center py-5">
+                                    <div style="color: #a0aec0; font-size: 3rem; margin-bottom: 1rem;">
+                                        <i class="fas fa-receipt"></i>
+                                    </div>
+                                    <h5 style="color: #4a5568; font-weight: 600;">Nenhuma transação encontrada</h5>
+                                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">
+                                        Adicione a primeira transação para esta conta
+                                    </p>
+                                    <a th:href="@{'/conta/' + ${contaSelecionada.id} + '/transacoes/form'}"
+                                        class="btn btn-lg"
+                                        style="background: #ffd700; border: none; color: #1a365d; font-weight: 600; border-radius: 8px;">
+                                        <i class="fas fa-plus me-2"></i>Primeira Transação
+                                    </a>
+                                </div>
+
+                                <div th:if="${!#lists.isEmpty(transacoes)}" class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);">
+                                            <tr>
+                                                <th
+                                                    style="color: #1a365d; font-weight: 600; padding: 1rem; border: none;">
+                                                    <i class="fas fa-file-alt me-1"></i>Descrição
+                                                </th>
+                                                <th
+                                                    style="color: #1a365d; font-weight: 600; padding: 1rem; border: none;">
+                                                    <i class="fas fa-dollar-sign me-1"></i>Valor
+                                                </th>
+                                                <th
+                                                    style="color: #1a365d; font-weight: 600; padding: 1rem; border: none;">
+                                                    <i class="fas fa-calendar me-1"></i>Data
+                                                </th>
+                                                <th
+                                                    style="color: #1a365d; font-weight: 600; padding: 1rem; border: none;">
+                                                    <i class="fas fa-tag me-1"></i>Categoria
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="transacao : ${transacoes}"
+                                                th:onclick="'window.location.href=\'/conta/' + ${contaSelecionada.id} + '/transacoes/' + ${transacao.id} + '\''"
+                                                style="cursor: pointer; border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#f7fafc'"
+                                                onmouseout="this.style.backgroundColor='transparent'">
+
+                                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
+                                                    th:text="${transacao.descricao}"></td>
+
+                                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
+                                                    th:text="${transacao.valor}"></td>
+
+                                                <td style="padding: 1rem; color: #4a5568;"
+                                                    th:text="${#temporals.format(transacao.data,  'dd/MM/yyyy')}"></td>
+
+                                                <td style="padding: 1rem;">
+                                                    <span class="badge"
+                                                        style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%); 
+                                                             color: white; padding: 0.4rem 0.8rem; border-radius: 15px;"
+                                                        th:text="${transacao.categoria}"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -74,6 +197,6 @@
             </div>
         </div>
     </div>
-</div>
 </body>
+
 </html>
