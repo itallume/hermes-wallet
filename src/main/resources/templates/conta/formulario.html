@@ -13,6 +13,9 @@
             <div class="card-body">
 
 
+                <form th:action="@{/conta/{id}/transacoes/form(id=${conta.id})}" method="GET" class="mb-3">
+                    <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
+                </form>
 
     <form method="POST" th:action="@{/conta/save}"  th:object="${conta}">
 
@@ -51,7 +54,9 @@
         </div>
 
         <div class="d-grid">
-            <button type="submit" class="btn btn-success" style="background-color: #05213d;">Criar</button>
+            <button type="submit" class="btn btn-success" style="background-color: #05213d;"
+                    th:text="${conta.id != null} ? 'Editar' : 'Criar'">
+            </button>
         </div>
     </form>
 	</div>
