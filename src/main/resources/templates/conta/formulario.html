@@ -13,7 +13,8 @@
             <div class="card-body">
 
 
-                <form th:action="@{/conta/{id}/transacoes/form(id=${conta.id})}" method="GET" class="mb-3">
+                <form   th:style="${conta.id == null} ? 'display: none' : 'display:flex'"
+                        th:action="@{/conta/{id}/transacoes/form(id=${conta.id})}" method="GET" class="mb-3">
                     <button class="btn btn-primary" type="submit">Nova Transação(+)</button>
                 </form>
 
