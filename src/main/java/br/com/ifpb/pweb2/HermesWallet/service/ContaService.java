@@ -47,4 +47,9 @@ public class ContaService {
         return accounts;
     }
 
+    public Optional<Conta> getContaById(Long contaId) {
+        Optional<Conta> conta = _contaRepository.findById(contaId);
+        return conta;
+    }
+
 }
