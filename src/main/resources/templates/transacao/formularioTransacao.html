@@ -7,12 +7,12 @@
     <div class="container my-5 d-flex justify-content-center">
         <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
             <div class="card-header text-white text-center" style="background-color: #c59d34;">
-                <h4>Cadastro de Transação</h4>
+                <h4 th:text="${idConta != null} ? 'Edição de Transação ' : 'Cadastro de Transação'"></h4>
             </div>
             <div class="card-body">
 
 
-                <form method="POST" th:action="@{'/conta/' + *{conta.id} + '/transacoes'}" th:object="${transacao}">
+                <form method="POST" th:action="@{'/conta/' + ${idConta} + '/transacoes'}" th:object="${transacao}">
 
                     <div th:if="${mensagem}" class="alert alert-success text-center" role="alert">
                         [[${mensagem}]]

@@ -3,20 +3,14 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
-import br.com.ifpb.pweb2.HermesWallet.models.Conta;
-import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
-import br.com.ifpb.pweb2.HermesWallet.models.TipoCategoria;
-import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
+import br.com.ifpb.pweb2.HermesWallet.models.*;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
 import br.com.ifpb.pweb2.HermesWallet.service.TransacaoService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,6 +39,8 @@ public class TransacaoController {
             transacao.setConta(conta.get());
         }
 
+
+        model.addObject("idConta", transacao.getConta().getId());
         model.addObject("transacao", transacao);
         model.addObject("categorias", TipoCategoria.values());
         model.setViewName("transacao/formularioTransacao");
@@ -105,14 +101,16 @@ public class TransacaoController {
         return model;
     }
 
-    @GetMapping("/{id}")
+
+
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ModelAndView getTransacao(@PathVariable( value = "idConta") Long idConta,
                                      @PathVariable("id") Long id,
                                      ModelAndView model,
                                      RedirectAttributes attr,
                                      HttpSession session){
 
-        Optional<Conta> c = contaRepository.findById(id);
+        Optional<Conta> c = contaRepository.findById(idConta);
 
         if (c.isEmpty()){
             attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
@@ -123,12 +121,14 @@ public class TransacaoController {
         Conta conta = c.get();
         Correntista correntista = (Correntista) session.getAttribute("correntista");
 
-        if (conta.getCorrentista().getId() != correntista.getId() ){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
-            return model;
-        }
+//        if (conta.getCorrentista().getId() != correntista.getId() ){
+//            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
+//            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
+//            return model;
+//        } ADICIONAR ESSA VALIDAÇÂO DEPOIS, COMENTEI PARA PODER VALIDAR O RESTANTE DO CODIGO
 
+        model.addObject("categorias", TipoCategoria.values()); //  isso evita erro no <select>
+        attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
 
         model.addObject("transacao", transacaoService.findById(id));
         model.setViewName("transacao/formularioTransacao");

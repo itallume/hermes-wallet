@@ -28,7 +28,7 @@
                 <tr th:data-transacao-id="${transacao.id}"
                     th:data-conta-id="${idConta}"
                     th:each="transacao : ${transacoes}"
-                    onclick="window.location.href = '/conta/' + this.dataset.contaId + '/transacoes/form/' + this.dataset.transacaoId"
+                    onclick="window.location.href = '/conta/' + this.dataset.contaId + '/transacoes/' + this.dataset.transacaoId"
                     style="cursor: pointer">
 
                     <td th:text="${transacao.id}"></td>
