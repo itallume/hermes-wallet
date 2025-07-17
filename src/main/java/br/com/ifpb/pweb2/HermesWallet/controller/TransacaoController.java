@@ -119,7 +119,7 @@ public class TransacaoController {
         }
 
         Conta conta = c.get();
-        Correntista correntista = (Correntista) session.getAttribute("correntista");
+        Correntista correntista = (Correntista) session.getAttribute("usuario");
 
         if (conta.getCorrentista().getId() != correntista.getId() ){
             attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
