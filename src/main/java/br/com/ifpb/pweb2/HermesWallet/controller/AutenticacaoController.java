@@ -39,6 +39,7 @@ public class AutenticacaoController {
             Correntista correntista = _authService.obterCorrentistaPeloLogin(loginDTO);
             _authService.verificaCorrentista(loginDTO.senha(), correntista);
             session.setAttribute("usuario", correntista);
+            attributes.addFlashAttribute("greeting", "Olá " + correntista.getNome() + ", seja bem-vindo!");
 
             model.setViewName(
                 correntista.isAdmin() ?  "redirect:/correntista/list" : "redirect:/dashboard"
