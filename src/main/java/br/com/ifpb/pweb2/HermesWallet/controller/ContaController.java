@@ -63,8 +63,9 @@ public class ContaController {
     }
 
     @GetMapping("form")
-    public ModelAndView createForm(ModelAndView model) {
-        model.addObject("conta", new Conta());
+    public ModelAndView createForm(ModelAndView model, Conta conta) {
+
+        model.addObject("conta", conta);
         model.addObject("tiposConta", TipoConta.values());
         model.setViewName("conta/formulario");
         return model;
@@ -82,9 +83,8 @@ public class ContaController {
     public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr, HttpSession session) {
         Correntista correntista = (Correntista) session.getAttribute("usuario");
         try {
-    	attr.addFlashAttribute("msg", "Conta inserida com sucesso!");
-        System.out.println("criou");
         _contaService.createConta(conta,correntista);
+        attr.addFlashAttribute("msg", "Conta inserida com sucesso!");
         model.setViewName("redirect:/conta/list");
     	} catch (ErroDescricao e) {
             attr.addFlashAttribute("erroDescricao", e.getMessage());
@@ -97,7 +97,6 @@ public class ContaController {
         }
 
         if (model.getViewName() == null){
-            System.out.println("nao criou e deu erro");
             model.setViewName("redirect:/conta/form");
         }
 

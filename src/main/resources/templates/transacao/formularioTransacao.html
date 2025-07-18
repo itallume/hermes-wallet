@@ -99,6 +99,8 @@
                                 style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
                                 onfocus="this.style.borderColor='#2c5282'" onblur="this.style.borderColor='#e2e8f0'"
                                 placeholder="Ex: Pagamento de conta de luz, Salário recebido...">
+                            <p class="text-danger mt-1" th:if="${erroDescricao}" th:text="${erroDescricao}"></p>
+
                         </div>
 
                         <!-- Valor e Categoria em linha -->
@@ -121,10 +123,12 @@
                                             onblur="this.style.borderColor='#e2e8f0'; this.previousElementSibling.style.borderColor='#e2e8f0';"
                                             placeholder="0,00">
                                     </div>
-                                    <small class="form-text text-muted">
-                                        <i class="fas fa-info-circle me-1"></i>
-                                        Use valores negativos para saídas (despesas)
-                                    </small>
+                                    <p class="text-danger mt-1" th:if="${erroValor}" th:text="${erroValor}"></p>
+
+                                    <!--                                    <small class="form-text text-muted">-->
+<!--                                        <i class="fas fa-info-circle me-1"></i>-->
+<!--                                        Use valores negativos para saídas (despesas)-->
+<!--                                    </small>-->
                                 </div>
                             </div>
 
@@ -138,9 +142,10 @@
                                         style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
                                         onfocus="this.style.borderColor='#2c5282'"
                                         onblur="this.style.borderColor='#e2e8f0'">
-                                        <option value="">Selecione a categoria</option>
                                         <option th:each="cat : ${categorias}" th:value="${cat}" th:text="${cat}"></option>
                                     </select>
+                                    <p class="text-danger mt-1" th:if="${erroCategoria}" th:text="${erroCategoria}"></p>
+
                                 </div>
                             </div>
                         </div>
@@ -152,14 +157,13 @@
                                     <i class="fas fa-tags me-2"></i>Tipo de Transação:
                                 </label>
                                 <select class="form-select form-select-lg" th:field="*{tipoTransacao}"
-                                    style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
-                                    onfocus="this.style.borderColor='#2c5282'"
-                                    onblur="this.style.borderColor='#e2e8f0'">
-                                    <option value="">Selecione o tipo de transação</option>
-                                    <option value="DEBITO"> Débito</option>
-                                    <option value="CREDITO"> Crédito</option>
-                                    <option value="INVESTIMENTO">Investimento</option>
+                                        style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                        onfocus="this.style.borderColor='#2c5282'"
+                                        onblur="this.style.borderColor='#e2e8f0'">
+                                    <option th:each="tr : ${tipoTransacao}" th:value="${tr}" th:text="${tr}"></option>
                                 </select>
+                                <p class="text-danger mt-1" th:if="${tipoTransacaoInvalido}" th:text="${tipoTransacaoInvalido}"></p>
+
                             </div>
                         </div>
                 </div>

@@ -3,6 +3,7 @@ package br.com.ifpb.pweb2.HermesWallet.service;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoTransacaoInvalido;
 import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
@@ -26,7 +27,7 @@ public class TransacaoService {
     private ContaRepository _contaRepository;
 
     @Transactional
-    public Transacao save(Transacao novaTransacao) throws ErroCategoria, ErroDescricao, ErroValor {
+    public Transacao save(Transacao novaTransacao) throws ErroCategoria, ErroDescricao, ErroValor, TipoTransacaoInvalido {
         novaTransacao.setData(Instant.now());
 
         if (novaTransacao.getDescricao() == null || novaTransacao.getDescricao().isBlank()){
@@ -34,9 +35,12 @@ public class TransacaoService {
         }
         if (novaTransacao.getValor() < 0 || novaTransacao.getValor() == 0.0){
             throw new ErroValor("Valor de transação inválido");
-        }
+        } //implementar a pesquisa se a categ existe no enum
         if (novaTransacao.getCategoria() == null || novaTransacao.getCategoria().name().isBlank()){
             throw new ErroCategoria("Categoria inválida");
+        } //implementar a pesquisa se o tipo de categ existe no enum
+        if (novaTransacao.getTipoTransacao() == null) {
+            throw new TipoTransacaoInvalido("Tipo de transação inválida");
         }
 
         return _transacaoRepository.save(novaTransacao);

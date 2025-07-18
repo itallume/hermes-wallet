@@ -35,10 +35,11 @@
 
     <!-- Message Alert -->
     <div class="container" th:if="${mensagem}">
-        <div class="alert alert-info"
+        <div class="alert alert-info alert-dismissible fade show mt-3"
              style="background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%); 
                     border: 1px solid #2c5282; color: #1a365d; border-radius: 8px;">
             <h5 th:text="${mensagem}" style="margin: 0; font-weight: 500;"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>
 

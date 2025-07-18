@@ -3,6 +3,7 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoTransacaoInvalido;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
@@ -47,6 +48,7 @@ public class TransacaoController {
         model.addObject("idConta", transacao.getConta().getId());
         model.addObject("transacao", transacao);
         model.addObject("categorias", TipoCategoria.values());
+        model.addObject("tipoTransacao", TipoTransacao.values());
         model.setViewName("transacao/formularioTransacao");
         return model;
     }
@@ -83,6 +85,8 @@ public class TransacaoController {
             attr.addFlashAttribute("erroDescricao", e.getMessage());
         } catch (ErroValor e){
             attr.addFlashAttribute("erroValor", e.getMessage());
+        } catch (TipoTransacaoInvalido e){
+            attr.addFlashAttribute("tipoTransacaoInvalido", e.getMessage());
         } catch (Exception e) {
             attr.addFlashAttribute("erro", "Erro inesperado");
         }
