@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,7 +16,10 @@ public class Transacao {
     private Instant data;
     private String descricao;
     private double valor;
-    private String comentario;
+
+
+    @OneToMany
+    private List<Comentario> comentarios;
     
     @ManyToOne
     @JoinColumn(name = "conta_id")
