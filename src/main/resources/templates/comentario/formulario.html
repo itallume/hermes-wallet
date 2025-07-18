@@ -9,9 +9,9 @@
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;"
-                        th:text="${conta.id != null} ? 'Editar Comentário' : 'Adicionar Comentário'">Adicionar Comentário</h1>
+                        th:text="${transacao.id != null} ? 'Adicionar Comentário' : 'Editar Comentário'">Adicionar Comentário</h1>
                     <p style="color: #e2e8f0; margin-bottom: 0;"
-                       th:text="${conta.id != null} ? 'Atualize o seu comentário a essa transação' : 'Adicione um novo comentário a essa transação'">
+                       th:text="${transacao.id != null} ? 'Adicione um novo comentário a essa transação' : 'Atualize o seu comentário a essa transação'">
                         Adicione um novo comentário a essa transação
                     </p>
                 </div>
@@ -37,10 +37,10 @@
                             border-radius: 12px 12px 0 0; padding: 1.5rem;">
                 <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
                     <i class="fas fa-credit-card me-2"></i>
-                    <span th:text="${transacao.id != null} ? 'Editar Comentário' : 'Novo Comentário'">Novo Comentário</span>
+                    <span th:text="${transacao.id != null} ? 'Novo Comentário' : 'Editar Comentário'">Novo Comentário</span>
                 </h4>
                 <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
-                        <span th:text="${transacao.id != null} ? 'Modifique os dados conforme necessário' : 'Preencha os dados do novo comentário'">
+                        <span th:text="${transacao.id != null} ? 'Preencha os dados do novo comentário' : 'Modifique os dados conforme necessário'">
                             Preencha os dados do novo comentário
                         </span>
                 </p>
@@ -57,7 +57,7 @@
                 </div>
 
 
-                <form method="POST" th:action="@{/comentario/save}" th:object="${comentario}">
+                <form method="POST" th:action="@{'/conta/' + ${idConta} + '/transacoes/' + ${idTransacao} + '/comentarios'}" th:object="${comentario}">
 
                     <input type="hidden" th:field="*{id}">
                     <input type="hidden" th:field="*{transacao.id}"/>
@@ -70,7 +70,7 @@
                                style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
                                onfocus="this.style.borderColor='#2c5282'"
                                onblur="this.style.borderColor='#e2e8f0'"
-                               placeholder="Ex: Conta Principal, Conta Poupança...">
+                               placeholder="Ex: Transação Mensal...">
                     </div>
 
 
@@ -93,7 +93,7 @@
                                                    box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);"
                                         onmouseover="this.style.backgroundColor='#ffd700'; this.style.color='#ffd700';"
                                         onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">
-                                    <span th:text="Salvar"></span>
+                                    <span th:text="'Salvar'">Salvar</span>
                                 </button>
                             </div>
                         </div>
@@ -102,5 +102,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

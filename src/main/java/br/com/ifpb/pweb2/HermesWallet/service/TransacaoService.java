@@ -3,6 +3,7 @@ package br.com.ifpb.pweb2.HermesWallet.service;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
+import br.com.ifpb.pweb2.HermesWallet.models.Conta;
 import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
@@ -54,6 +55,10 @@ public class TransacaoService {
     @Transactional
     public List<Transacao> findAllById(Long contaId){
         return _transacaoRepository.findByContaId(contaId);
+    }
+
+    public Optional<Transacao> findTransacaoById(Long transacaoId) {
+        return _transacaoRepository.findById(transacaoId);
     }
 }
 
