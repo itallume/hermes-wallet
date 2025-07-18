@@ -105,6 +105,7 @@ public class TransacaoController {
         if(_authService.verificarPermissaoConta(correntista, conta.get())){
             model.addObject("transacoes", transacaoService.findAllById(id));
             model.addObject("idConta", id);
+            //model.addObject("conta", conta);
             model.setViewName("transacao/listaTransacao");
             return model;
         }
