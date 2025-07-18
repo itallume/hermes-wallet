@@ -14,6 +14,13 @@
                             Correntistas</h1>
                         <p style="color: #e2e8f0; margin-bottom: 0;">Visualize e gerencie todos os correntistas do
                             sistema</p>
+
+                        <div th:if="${greeting}" class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                            <i class="fas fa-smile-beam me-2"></i>
+                            <span th:text="${greeting}">Mensagem de boas-vindas</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
                     </div>
                     <div class="col-md-4 text-end">
                         <form th:action="@{/correntista/form}" method="GET" style="display: inline;">
