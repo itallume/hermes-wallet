@@ -18,9 +18,9 @@ public class Transacao {
     private double valor;
 
 
-    @OneToMany
+    @OneToMany(mappedBy = "transacao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comentarios;
-    
+
     @ManyToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;

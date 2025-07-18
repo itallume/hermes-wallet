@@ -5,6 +5,7 @@ import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
+import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
 import br.com.ifpb.pweb2.HermesWallet.service.ComentarioService;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
@@ -32,6 +33,9 @@ public class ComentarioController {
     ContaRepository contaRepository;
 
     @Autowired
+    TransacaoRepository transacaoRepository;
+
+    @Autowired
     TransacaoService _transacaoService;
 
     @Autowired
@@ -48,19 +52,19 @@ public class ComentarioController {
                                 HttpSession session){
 
         Optional<Conta> c = _contaService.getContaById(idConta);
-        Optional<Transacao> t = _transacaoService.findById(idTransacao); //testar
+        Optional<Transacao> t = _transacaoService.findTransacaoById(idTransacao); //testar
 
         Conta conta = c.get();
         Transacao transacao = t.get();
 
         Correntista correntista = (Correntista) session.getAttribute("usuario");
-        
+
         if(!_authService.verificarPermissaoConta(correntista, conta)){
             attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
             model.setViewName("redirect:/login");
             return model;
         }
-        
+
         comentario.setTransacao(transacao);
         model.addObject("idConta", transacao.getConta().getId());
         model.addObject("idTransacao", comentario.getTransacao().getId());
@@ -80,7 +84,7 @@ public class ComentarioController {
                              HttpSession session){
 
         Optional<Conta> c = contaRepository.findById(idConta);
-        Optional<Transacao> t = _transacaoService.findById(idTransacao); //testar
+        Optional<Transacao> t = transacaoRepository.findById(idTransacao); //testar
 
 
 
@@ -92,6 +96,8 @@ public class ComentarioController {
 
         Conta conta = c.get();
         Transacao transacao = t.get();
+
+
 
         Correntista correntista = (Correntista) session.getAttribute("usuario");
 
@@ -116,28 +122,29 @@ public class ComentarioController {
         }
 
         if (model.getViewName() == null) {
-            model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao + "/comentarios/form");
+            model.setViewName("redirect:/conta/" + idConta + "/transacoes/");
         }
 
         attr.addFlashAttribute("comentario", comentario);
+        model.setViewName("redirect:/conta/" + idConta + "/transacoes");
         return model;
     }
 
-//    @GetMapping
-//    public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
-//        Correntista correntista = (Correntista) session.getAttribute("usuario");
-//        Optional<Conta> conta = _contaService.getContaById(id);
-//        if(_authService.verificarPermissaoConta(correntista, conta.get())){
-//            model.addObject("transacoes", transacaoService.findAllById(id));
-//            model.addObject("idConta", id);
-//            model.setViewName("transacao/listaTransacao");
-//            return model;
-//        }
-//        attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-//        model.setViewName("redirect:/login");
-//        return model;
-//    }
-//
+    @GetMapping
+    public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
+        Correntista correntista = (Correntista) session.getAttribute("usuario");
+        Optional<Conta> conta = _contaService.getContaById(id);
+        if(_authService.verificarPermissaoConta(correntista, conta.get())){
+            model.addObject("comentarios", comentarioService.findAllById(id));
+            model.addObject("idTransacao", id);
+            model.setViewName("comentarios/list");
+            return model;
+        }
+        attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
+        model.setViewName("redirect:/login");
+        return model;
+    }
+
 
 //
 //    @GetMapping("/{id}")
