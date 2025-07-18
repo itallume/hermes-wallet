@@ -57,7 +57,7 @@ public class AutenticacaoController {
         return model;
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ModelAndView logout(ModelAndView mav, HttpSession session) {
         session.invalidate();
         mav.setViewName("redirect:/login");

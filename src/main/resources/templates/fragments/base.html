@@ -37,6 +37,11 @@
                     </a>
                 </ul>
             </div>
+            <form th:action="@{/logout}" method="post" class="d-flex ms-auto">
+                <button type="submit" class="btn btn-outline-warning" style="font-weight: 500;">
+                    Logout
+                </button>
+            </form>
         </div>
     </nav>
 </header>
