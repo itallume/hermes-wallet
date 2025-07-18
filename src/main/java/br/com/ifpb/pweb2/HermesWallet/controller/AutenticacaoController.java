@@ -39,7 +39,10 @@ public class AutenticacaoController {
             Correntista correntista = _authService.obterCorrentistaPeloLogin(loginDTO);
             _authService.verificaCorrentista(loginDTO.senha(), correntista);
             session.setAttribute("usuario", correntista);
-            model.setViewName("redirect:/dashboard");
+
+            model.setViewName(
+                correntista.isAdmin() ?  "redirect:/correntista/list" : "redirect:/dashboard"
+            );
             return model;
         } catch (LoginOuSenhaInvalidos e) {
             model.addObject("erro", e.getMessage());
