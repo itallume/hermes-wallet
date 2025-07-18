@@ -2,6 +2,9 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 
 import java.util.Optional;
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.NumeroInvalido;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoContaInvalido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,19 +77,31 @@ public class ContaController {
         model.setViewName("conta/lista");
         return model;
     }
-//criar conta agora passa correntista
+
     @PostMapping("save")
     public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr, HttpSession session) {
         Correntista correntista = (Correntista) session.getAttribute("usuario");
-        //faz um teste se tem esse user lauro
         try {
     	attr.addFlashAttribute("msg", "Conta inserida com sucesso!");
+        System.out.println("criou");
         _contaService.createConta(conta,correntista);
         model.setViewName("redirect:/conta/list");
-    	} catch (Exception e) {
-    		attr.addFlashAttribute("erro", e.getMessage());
+    	} catch (ErroDescricao e) {
+            attr.addFlashAttribute("erroDescricao", e.getMessage());
+        } catch (NumeroInvalido e) {
+            attr.addFlashAttribute("numeroInvalido", e.getMessage());
+        } catch (TipoContaInvalido e) {
+            attr.addFlashAttribute("tipoContaInvalido", e.getMessage());
+        } catch (Exception e) {
+    		attr.addFlashAttribute("erro", "Erro inesperado");
+        }
+
+        if (model.getViewName() == null){
+            System.out.println("nao criou e deu erro");
             model.setViewName("redirect:/conta/form");
         }
+
+        attr.addFlashAttribute("conta", conta);
         return model;
     }
 }

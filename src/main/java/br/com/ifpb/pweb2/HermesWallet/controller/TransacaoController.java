@@ -79,13 +79,10 @@ public class TransacaoController {
             model.setViewName("redirect:/conta/" + id + "/transacoes");
         } catch (ErroCategoria e) {
             attr.addFlashAttribute("erroCategoria", e.getMessage());
-            //model.addObject("erroCategoria", e.getMessage());
         } catch  (ErroDescricao e){
             attr.addFlashAttribute("erroDescricao", e.getMessage());
-            //model.addObject("erroDescricao", e.getMessage());
         } catch (ErroValor e){
             attr.addFlashAttribute("erroValor", e.getMessage());
-            //model.addObject("erroValor", e.getMessage());
         } catch (Exception e) {
             attr.addFlashAttribute("erro", "Erro inesperado");
         }

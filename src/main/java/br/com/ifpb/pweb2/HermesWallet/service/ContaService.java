@@ -3,6 +3,9 @@ package br.com.ifpb.pweb2.HermesWallet.service;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.NumeroInvalido;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoContaInvalido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +26,22 @@ public class ContaService {
 
     //TODO remover gambiarra do correntista
     @Transactional
-    public Conta createConta(Conta contaNova, Correntista correntista){
+    public Conta createConta(Conta contaNova, Correntista correntista) throws ErroDescricao, NumeroInvalido, TipoContaInvalido {
+
+        if (contaNova.getDescricao() == null || contaNova.getDescricao().isBlank()){
+            throw new ErroDescricao("Descrição não pode ser vazia");
+        }
+        if (contaNova.getNumero() == null || contaNova.getNumero().isBlank()){
+            throw new NumeroInvalido("Digite um número de conta válido");
+        }
+        if (contaNova.getTipo() == null){
+            throw new TipoContaInvalido("Descrição não pode ser vazia");
+        }
+
+
         contaNova.setCorrentista(correntista);
         return _contaRepository.save(contaNova);
     }
-//    public Conta createConta(Conta contaNova){
-//        Optional<Correntista> c = _correntistaRepository.findById(1233L);
-//        if(c.isPresent()){
-//            contaNova.setCorrentista(c.get());
-//        }
-//        return _contaRepository.save(contaNova);
-//    }
 
     @Transactional
     public List<Conta> getContas() {
