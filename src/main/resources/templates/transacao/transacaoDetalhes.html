@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
@@ -6,54 +6,120 @@
       th:with="titulo='Detalhes da Transação'">
 <body>
 <div layout:fragment="content">
-    <div>
-        ID: <h1 th:text="${idTransacao}"></h1>
-    </div>
-    <div>
-        Descrição: <h1 th:text="${descricao}"></h1>
-    </div>
-    <div>
-        Valor: <h1 th:text="${valor}"></h1>
-    </div>
-    <div>
-        Data: <h1 th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></h1>
-    </div>
-    <div>
-        Categoria: <h1 th:text="${categoria}"></h1>
-    </div>
-    <div>
-        <h2>Comentários</h2>
-        <ul>
-            <li th:each="comentario : ${comentarios}">
-                <span th:text="${comentario.texto}"></span>
-                <!-- Ícones de editar e excluir -->
-                <a th:href="@{/comentario/editar/{id}(id=${comentario.id})}">✏️</a>
-                <a th:href="@{/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}/excluir(idConta=${idConta}, idTransacao=${idTransacao}, id=${comentario.id})}">🗑️</a>
-
-            </li>
-        </ul>
+    <!-- Botão Voltar para lista de transações -->
+    <div class="col-md-2">
+    <a th:href="@{/conta/{idConta}/transacoes(idConta=${idConta})}"
+       class="btn btn-outline-light btn-lg px-3"
+       style="border-color: #e2e8f0; color: #e2e8f0; font-weight: 500;"
+       onmouseover="this.style.backgroundColor='#e2e8f0'; this.style.color='#1a365d';"
+       onmouseout="this.style.backgroundColor='transparent'; this.style.color='#e2e8f0';">
+        <i class="fas fa-arrow-left me-1"></i>Voltar
+    </a>
     </div>
 
 
-<!--    <div class="">-->
-<!--        <span> </span>-->
-<!--        Conta: <h1 th:text="${transacao.getConta()}"></h1>-->
-<!--        <h5 th:text="${mensagem}" style="margin: 0; font-weight: 500;"></h5>-->
-<!--        <span class="me-4">-->
-<!--            <strong>Número da Conta:</strong>-->
-<!--            <span th:text="${numeroConta}">04</span>-->
-<!--        </span>-->
+    <div class="container mb-5">
+        <div class="card"
+             style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
+            <div class="card-header"
+                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+                        border-radius: 12px 12px 0 0;
+                        padding: 1.5rem;">
+                <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
+                    <i class="fas fa-list me-2"></i>Detalhes da Transação
+                </h4>
+            </div>
 
-<!--    </div>-->
+<!--            <div class="card-body p-0">-->
+<!--                <p><strong>ID:</strong> <span th:text="${idTransacao}"></span></p>-->
+<!--                <p><strong>Descrição:</strong> <span th:text="${descricao}"></span></p>-->
+<!--                <p><strong>Valor:</strong> R$ <span th:text="${valor}"></span></p>-->
+<!--                <p><strong>Data:</strong>-->
+<!--                    <span th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></span>-->
+<!--                </p>-->
+<!--                <p><strong>Categoria:</strong> <span th:text="${categoria}"></span></p>-->
+<!--            </div>-->
 
-<!--    <div>-->
-<!--        <h1>Lista de Comentários</h1>-->
+            <div class="card-body"
+                 style="padding: 1.5rem;">
+                <div class="row mb-2">
+                    <div class="col-sm-2"><strong>ID:</strong></div>
+                    <div class="col-sm-9" th:text="${idTransacao}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-2 "><strong>Descrição:</strong></div>
+                    <div class="col-sm-9" th:text="${descricao}"></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-2 "><strong>Valor:</strong></div>
+                    <div class="col-sm-9">R$ <span th:text="${valor}"></span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-2 "><strong>Data:</strong></div>
+                    <div class="col-sm-9"
+                         th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2 "><strong>Categoria:</strong></div>
+                    <div class="col-sm-9" th:text="${categoria}"></div>
+                </div>
+            </div>
+        </div>
 
-<!--        <ul>-->
-<!--            <li th:each="comentario : ${comentarios}" th:text="${comentario.texto}"></li>-->
-<!--        </ul>-->
-<!--    </div>-->
 
+<!--oi-->
+        <!-- Cartão de Comentários -->
+        <div class="card mb-4"
+             style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
+            <!-- Header com gradiente, título à esquerda e botão à direita -->
+            <div class="card-header d-flex justify-content-between align-items-center"
+                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+              border-radius: 12px 12px 0 0; padding: 1rem;">
+                <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
+                    <i class="fas fa-comments me-2"></i>Comentários
+                </h4>
+                <a th:href="@{/conta/{idConta}/transacoes/{idTransacao}/comentarios/form(idConta=${idConta},idTransacao=${idTransacao})}"
+                   class="btn btn-warning btn-sm"
+                   style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600;">
+                    <i class="fas fa-plus me-1"></i>Novo Comentário
+                </a>
+            </div>
+
+            <!-- Body com lista de comentários -->
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush" th:if="${comentarios != null and !#lists.isEmpty(comentarios)}">
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        th:each="comentario : ${comentarios}">
+                        <div>
+                            <span th:text="${comentario.texto}">Texto do comentário</span>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-outline-primary"
+                               th:href="@{/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}(idConta=${idConta},idTransacao=${idTransacao},id=${comentario.id})}">
+                                Editar
+                            </a>
+                            <a class="btn btn-outline-danger"
+                               th:href="@{/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}/excluir(idConta=${idConta},idTransacao=${idTransacao},id=${comentario.id})}">
+                                Excluir
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Empty State -->
+                <div th:if="${comentarios == null or #lists.isEmpty(comentarios)}"
+                     class="text-center py-4"
+                     style="color: #4a5568;">
+                    <i class="fas fa-comment-slash fa-2x mb-2" style="color: #a0aec0;"></i>
+                    <p class="mb-0">Nenhum comentário cadastrado.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!--        oi-->
+    </div>
 </div>
 </body>
 </html>

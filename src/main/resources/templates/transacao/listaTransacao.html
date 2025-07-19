@@ -24,7 +24,7 @@
                         <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET"
                               style="display: inline;">
                             <button class="btn btn-warning btn-lg px-4" type="submit"
-                                    style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600; 
+                                    style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600;
                                            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);">
                                 <i class="fas fa-plus me-2"></i>Nova Transação
                             </button>
@@ -44,7 +44,7 @@
     <!-- Message Alert -->
     <div class="container" th:if="${mensagem}">
         <div class="alert alert-info alert-dismissible fade show mt-3"
-             style="background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%); 
+             style="background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
                     border: 1px solid #2c5282; color: #1a365d; border-radius: 8px;">
             <h5 th:text="${mensagem}" style="margin: 0; font-weight: 500;"></h5>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -141,7 +141,7 @@
 
                             <td style="padding: 1rem;">
                                     <span class="badge"
-                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%); 
+                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
                                                  color: white; padding: 0.4rem 0.8rem; border-radius: 15px;"
                                           th:text="${transacao.categoria}"></span>
                             </td>
@@ -154,33 +154,13 @@
                                 </div>
                                 <div th:unless="${#lists.isEmpty(transacao.comentarios)}">
                                     <div class="block gap-4">
-                                        <div th:each="comentario : ${transacao.comentarios}"
+                                        <div th:text="'Total de comentários: ' + ${#lists.size(transacao.comentarios)}"
                                              class="d-flex align-items-center flex-wrap mt-8 gap-2">
-            <span class="badge"
-                  style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
-                         color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
-                <i class="fas fa-credit-card me-1"></i>
-                <span th:text="${comentario.texto}"></span>
-            </span>
-
-                                            <!-- Botão Editar -->
-                                            <a th:href="@{~/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}(
-                            idConta=${idConta}, idTransacao=${transacao.id}, id=${comentario.id})}"
-                                               class="btn btn-sm"
-                                               style="background-color: #ecc94b; color: white; font-weight: 600; border-radius: 12px;">
-                                                Editar
-                                            </a>
-
-                                            <!-- Botão Excluir -->
-                                            <form th:action="@{~/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}/excluir(
-                            idConta=${idConta}, idTransacao=${transacao.id}, id=${comentario.id})}"
-                                                  method="post" th:object="${comentario}"
-                                                  style="display: inline;">
-                                                <button type="submit" class="btn btn-sm"
-                                                        style="background-color: #e53e3e; color: white; font-weight: 600; border-radius: 12px;">
-                                                    X
-                                                </button>
-                                            </form>
+                                                <span class="badge"
+                                                      style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
+                                                             color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                                    <i class="fas fa-credit-card me-1"></i>
+                                                </span>
                                         </div>
                                     </div>
                                 </div>
@@ -189,13 +169,13 @@
 
 
                             <td>
-                                <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/comentarios/form(id=${idConta}, transacaoId=${transacao.id})}"
+                                <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/detalhes(id=${idConta}, transacaoId=${transacao.id})}"
                                    style="text-decoration: none;"><span class="badge"
                                                                         style="background: green;
                                                 color: white;
                                                 padding: 0.5rem 1rem;
                                                 border-radius: 20px;"
-                                >Adicionar Comentário</span></a>
+                                >Detalhes</span></a>
 
                             </td>
                         </tr>

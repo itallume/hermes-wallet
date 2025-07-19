@@ -108,9 +108,6 @@ public class ComentarioController {
 
         Conta conta = c.get();
         Transacao transacao = t.get();
-
-
-
         Correntista correntista = (Correntista) session.getAttribute("usuario");
 
         if (conta.getCorrentista().getId() != correntista.getId() ){
@@ -119,16 +116,30 @@ public class ComentarioController {
             return model;
         }
 
-
         try {
-            comentarioService.save(comentario);
-            attr.addFlashAttribute("mensagem", "Comentario criada com sucesso!");
-//            model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+            if (comentario.getId() != null) {
+                Optional<Comentario> comentarioEdit = comentarioRepository.findById(comentario.getId());
+                if (comentarioEdit.isEmpty()) {
+                    attr.addFlashAttribute("erro", "Comentário inexistente!");
+                    model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao);
+                    return model;
+                }
+                Comentario comentarioExistente = comentarioEdit.get();
 
-        } catch  (ErroDescricao e){
-            attr.addFlashAttribute("erroTexto", e.getMessage());
-            //model.addObject("erroDescricao", e.getMessage());
-
+                // Garantir que o comentário pertence à mesma transação
+                if (!comentarioExistente.getTransacao().getId().equals(idTransacao)) {
+                    attr.addFlashAttribute("erro", "Comentário não pertence à transação especificada.");
+                    model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao);
+                    return model;
+                }
+                comentarioExistente.setTexto(comentario.getTexto()); //att aqui
+                comentarioService.save(comentarioExistente);
+                attr.addFlashAttribute("mensagem", "Comentário editado com sucesso!");
+            } else {
+                comentario.setTransacao(transacao);
+                comentarioService.save(comentario);
+                attr.addFlashAttribute("mensagem", "Comentário criado com sucesso!");
+            }
         } catch (Exception e) {
             attr.addFlashAttribute("erro", "Erro inesperado");
         }
@@ -138,7 +149,8 @@ public class ComentarioController {
         }
 
         attr.addFlashAttribute("comentario", comentario);
-        model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+        //model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+        model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao + "/detalhes");
         return model;
     }
 
