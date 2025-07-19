@@ -200,14 +200,12 @@ public class ComentarioController {
 
         attr.addFlashAttribute("msg", "Comentário acessado com Sucesso!");
         model.addObject("transacao", transacao);
-        model.addObject("comentario", comentarioService.findById(id));
+        model.addObject("comentario", comentarioService.findById(id).get());
         model.setViewName("comentario/formulario");
         return model;
     }
 
-
-
-    @PostMapping("/{id}/excluir")
+    @GetMapping("/{id}/excluir")
     public ModelAndView excluirComentario(@PathVariable(value = "idConta") Long idConta,
                                           @PathVariable(value = "idTransacao") Long idTransacao,
                                           @PathVariable(value = "id") Long id,
@@ -224,8 +222,7 @@ public class ComentarioController {
         }
 
         attr.addFlashAttribute("msg", "Comentário excluído com Sucesso!");
-        model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+        model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao + "/detalhes");
         return model;
     }
-
 }

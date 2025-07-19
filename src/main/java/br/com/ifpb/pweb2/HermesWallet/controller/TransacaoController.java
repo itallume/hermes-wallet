@@ -5,8 +5,10 @@ import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoTransacaoInvalido;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
+import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
+import br.com.ifpb.pweb2.HermesWallet.service.ComentarioService;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
 import br.com.ifpb.pweb2.HermesWallet.service.TransacaoService;
 import jakarta.servlet.http.HttpSession;
@@ -31,6 +33,11 @@ public class TransacaoController {
     AuthService _authService;
     @Autowired
     TransacaoService transacaoService;
+    @Autowired
+    ComentarioService _comentarioService;
+    @Autowired
+    ComentarioRepository _comentarioRepository;
+
 
     @GetMapping("/form")
     public ModelAndView getForm(@PathVariable(value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr,HttpSession session){
@@ -110,7 +117,6 @@ public class TransacaoController {
             model.addObject("idConta", id);
             //model.addObject("conta", conta);
             model.addObject("descricaoConta", c.getDescricao());
-            System.out.println(c.getDescricao() + "entrou");
             model.addObject("numeroConta", c.getNumero());
             model.setViewName("transacao/listaTransacao");
             return model;
@@ -139,13 +145,6 @@ public class TransacaoController {
 
         Conta conta = c.get();
         Correntista correntista = (Correntista) session.getAttribute("usuario");
-
-//        if (conta.getCorrentista().getId() != correntista.getId() ){
-//            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-//            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
-//            return model;
-//        } //ADICIONAR ESSA VALIDAÇÂO DEPOIS, COMENTEI PARA PODER VALIDAR O RESTANTE DO CODIGO
-
         model.addObject("categorias", TipoCategoria.values()); //  isso evita erro no <select>
         attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
         model.addObject("transacao", transacaoService.findById(id));
@@ -153,4 +152,52 @@ public class TransacaoController {
         return model;
     }
 
+    @GetMapping("/{id}/detalhes")
+    public ModelAndView detalhesTransacao(
+            @PathVariable Long idConta,
+            @PathVariable Long id,
+            HttpSession session,
+            RedirectAttributes attr,
+            ModelAndView model) {
+
+        // valida conta
+        Optional<Conta> contaOpt = _contaService.getContaById(idConta);
+        if (contaOpt.isEmpty()) {
+            attr.addFlashAttribute("erro", "Conta inexistente");
+            model.setViewName("redirect:/conta/list");
+            return model;
+        }
+        Conta conta = contaOpt.get();
+
+        // valida transacao
+        Optional<Transacao> transacaoOpt = transacaoService.findTransacaoById(id);
+        if (transacaoOpt.isEmpty() || !transacaoOpt.get().getConta().getId().equals(idConta)) {
+            attr.addFlashAttribute("erro", "Transação não encontrada para esta conta");
+            model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+            return model;
+        }
+        Transacao transacao = transacaoOpt.get();
+
+        // verifica permissão
+        Correntista user = (Correntista) session.getAttribute("usuario");
+        if (!_authService.verificarPermissaoConta(user, conta)) {
+            attr.addFlashAttribute("erro", "Ação não autorizada");
+            model.setViewName("redirect:/login");
+            return model;
+        }
+
+        model.addObject("idConta", idConta);
+        model.addObject("transacao", transacao);
+        model.addObject("idTransacao", transacao.getId());
+        model.addObject("descricao", transacao.getDescricao());
+        model.addObject("valor", transacao.getValor());
+        model.addObject("data", transacao.getData());
+        model.addObject("categoria", transacao.getCategoria());
+        model.addObject("comentarios", transacao.getComentarios());
+        model.setViewName("transacao/transacaoDetalhes");
+        return model;
+    }
 }
+
+
+
