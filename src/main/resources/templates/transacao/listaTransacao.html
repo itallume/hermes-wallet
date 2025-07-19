@@ -10,7 +10,15 @@
                     <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;">Transações da Conta</h1>
                     <p style="color: #e2e8f0; margin-bottom: 0;">Visualize e gerencie todas as transações
                         financeiras</p>
+<!--                    <h1 style="color: #ffd700; margin-bottom: 0.5rem;">-->
+<!--                        Número da conta: <span th:text="${numeroConta}"> </span>-->
+<!--                    </h1>-->
+<!--                    <h1  style="color: #ffd700;  margin-bottom: 0.5rem;">-->
+<!--                        Descrição: <span th:text="${descricaoConta}" > </span>-->
+<!--                    </h1>-->
+
                 </div>
+
                 <div class="col-md-4 text-end">
                     <div class="d-flex justify-content-end gap-2">
                         <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET"
@@ -43,16 +51,51 @@
         </div>
     </div>
 
+<!--    <div class="card mb-4" style="background-color: #1a365d; border: none; border-radius: 10px; color: #ffd700;">-->
+<!--        <div class="card-body">-->
+<!--            <h4 class="card-title" style="font-weight: 600;">Informações da Conta</h4>-->
+<!--            <p class="card-text mb-1">-->
+<!--                <strong>Número da Conta:</strong> <span th:text="${numeroConta}">04</span>-->
+<!--            </p>-->
+<!--            <p class="card-text">-->
+<!--                <strong>Descrição:</strong> <span th:text="${descricaoConta}">Conta 04</span>-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </div>-->
+
     <!-- Main Content -->
     <div class="container mb-5">
         <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
             <div class="card-header"
-                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%); 
-                        border-radius: 12px 12px 0 0; padding: 1.5rem;">
-                <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
-                    <i class="fas fa-list me-2"></i>Histórico de Transações
-                </h4>
+                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            border-radius: 12px 12px 0 0; padding: 1.5rem;">
+
+                <div class="d-flex flex-column">
+
+                    <!-- Linha 1: ícone + título -->
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-list me-2" style="color: #ffd700;"></i>
+                        <h4 class="mb-0" style="color: #ffd700; font-weight: 600;">
+                            Histórico de Transações
+                        </h4>
+                    </div>
+
+                    <!-- Linha 2: dados, recuados igual ao título (ms-3) -->
+                    <div class="d-flex align-items-center mt-2 ms-2" style="color: #ffd700; font-size: .95rem;">
+                          <span class="me-4">
+                            <strong>Número da Conta:</strong>
+                            <span th:text="${numeroConta}">04</span>
+                          </span>
+                        <span>
+                            <strong>Descrição:</strong>
+                            <span th:text="${descricaoConta}">Conta 04</span>
+                          </span>
+                    </div>
+
+                </div>
             </div>
+
+
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle text-center mb-0">

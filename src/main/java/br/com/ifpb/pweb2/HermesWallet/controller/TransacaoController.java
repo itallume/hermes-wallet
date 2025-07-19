@@ -45,7 +45,7 @@ public class TransacaoController {
         }
         
         transacao.setConta(conta);
-        model.addObject("idConta", transacao.getConta().getId());
+        model.addObject("idConta", conta.getId());
         model.addObject("transacao", transacao);
         model.addObject("categorias", TipoCategoria.values());
         model.addObject("tipoTransacao", TipoTransacao.values());
@@ -103,10 +103,15 @@ public class TransacaoController {
     public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
         Correntista correntista = (Correntista) session.getAttribute("usuario");
         Optional<Conta> conta = _contaService.getContaById(id);
+        Conta c= conta.get();
+
         if(_authService.verificarPermissaoConta(correntista, conta.get())){
             model.addObject("transacoes", transacaoService.findAllById(id));
             model.addObject("idConta", id);
             //model.addObject("conta", conta);
+            model.addObject("descricaoConta", c.getDescricao());
+            System.out.println(c.getDescricao() + "entrou");
+            model.addObject("numeroConta", c.getNumero());
             model.setViewName("transacao/listaTransacao");
             return model;
         }
