@@ -9,9 +9,9 @@
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;"
-                        th:text="${transacao.id != null} ? 'Adicionar Comentário' : 'Editar Comentário'">Adicionar Comentário</h1>
+                        th:text="${comentario != null} ? 'Adicionar Comentário' : 'Editar Comentário'">Adicionar Comentário</h1>
                     <p style="color: #e2e8f0; margin-bottom: 0;"
-                       th:text="${transacao.id != null} ? 'Adicione um novo comentário a essa transação' : 'Atualize o seu comentário a essa transação'">
+                       th:text="${comentario != null} ? 'Adicione um novo comentário a essa transação' : 'Atualize o seu comentário a essa transação'">
                         Adicione um novo comentário a essa transação
                     </p>
                 </div>
@@ -27,7 +27,7 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+
     <div class="container my-5 d-flex justify-content-center">
         <div class="card shadow-lg" style="width: 100%; max-width: 600px; border: none; border-radius: 12px;">
 
@@ -37,10 +37,10 @@
                             border-radius: 12px 12px 0 0; padding: 1.5rem;">
                 <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
                     <i class="fas fa-credit-card me-2"></i>
-                    <span th:text="${transacao.id != null} ? 'Novo Comentário' : 'Editar Comentário'">Novo Comentário</span>
+                    <span th:text="${comentario != null} ? 'Novo Comentário' : 'Editar Comentário'">Novo Comentário</span>
                 </h4>
                 <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
-                        <span th:text="${transacao.id != null} ? 'Preencha os dados do novo comentário' : 'Modifique os dados conforme necessário'">
+                        <span th:text="${comentario != null} ? 'Preencha os dados do novo comentário' : 'Modifique os dados conforme necessário'">
                             Preencha os dados do novo comentário
                         </span>
                 </p>
@@ -59,7 +59,7 @@
 
                 <form method="POST" th:action="@{'/conta/' + ${idConta} + '/transacoes/' + ${idTransacao} + '/comentarios'}" th:object="${comentario}">
 
-                    <input type="hidden" th:field="*{id}">
+                    <input type="hidden" th:field="*{id}"/>
                     <input type="hidden" th:field="*{transacao.id}"/>
 
                     <div class="mb-4">

@@ -104,67 +104,79 @@
                             </td>
 
 
-
-
-
                             <td style="padding: 1rem;">
                                 <div th:if="${#lists.isEmpty(transacao.comentarios)}"
                                      style="color: #a0aec0; font-style: italic;">
                                     Nenhum comentario
                                 </div>
                                 <div th:unless="${#lists.isEmpty(transacao.comentarios)}">
-                                            <span th:each="comentario : ${transacao.comentarios}">
-                                                <span class="badge me-1 mb-1"
-                                                      style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
-                                                             color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
-                                                    <i class="fas fa-credit-card me-1"></i><span
-                                                        th:text="${comentario.texto}"></span>
-                                                </span>
-                                            </span>
+                                    <div class="block gap-4">
+                                        <div th:each="comentario : ${transacao.comentarios}"
+                                             class="d-flex align-items-center flex-wrap mt-8 gap-2">
+            <span class="badge"
+                  style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
+                         color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                <i class="fas fa-credit-card me-1"></i>
+                <span th:text="${comentario.texto}"></span>
+            </span>
+
+                                            <!-- Botão Editar -->
+                                            <a th:href="@{~/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}(
+                            idConta=${idConta}, idTransacao=${transacao.id}, id=${comentario.id})}"
+                                               class="btn btn-sm"
+                                               style="background-color: #ecc94b; color: white; font-weight: 600; border-radius: 12px;">
+                                               Editar
+                                            </a>
+
+                                            <!-- Botão Excluir -->
+                                            <form th:action="@{~/conta/{idConta}/transacoes/{idTransacao}/comentarios/{id}/excluir(
+                            idConta=${idConta}, idTransacao=${transacao.id}, id=${comentario.id})}"
+                                                  method="post" th:object="${comentario}"
+                                                  style="display: inline;">
+                                                <button type="submit" class="btn btn-sm"
+                                                        style="background-color: #e53e3e; color: white; font-weight: 600; border-radius: 12px;">
+                                                    X
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </td>
 
 
-
-
-
-                <td>
-                    <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/comentarios/form(id=${idConta}, transacaoId=${transacao.id})}"
-                       style="text-decoration: none;"><span class="badge"
-                                                            style="background: green;
+                            <td>
+                                <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/comentarios/form(id=${idConta}, transacaoId=${transacao.id})}"
+                                   style="text-decoration: none;"><span class="badge"
+                                                                        style="background: green;
                                                 color: white;
                                                 padding: 0.5rem 1rem;
                                                 border-radius: 20px;"
-                    >Adicionar Comentário</span></a>
-                    <a th:href="@{~/conta/{id}(id=${idConta})}" style="text-decoration: none;"><span class="badge"
-                                                                                                      style="background: yellow;
-                                                color: #2c5282;
-                                                padding: 0.5rem 1rem;
-                                                border-radius: 20px;"
-                    >Editar Comentário</span></a>
-                </td>
-                </tr>
-                </tbody>
-                </table>
+                                >Adicionar Comentário</span></a>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Empty State -->
-    <div th:if="${#lists.isEmpty(transacoes)}" class="text-center py-5">
-        <div style="color: #a0aec0; font-size: 4rem; margin-bottom: 1rem;">
-            <i class="fas fa-receipt"></i>
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(transacoes)}" class="text-center py-5">
+            <div style="color: #a0aec0; font-size: 4rem; margin-bottom: 1rem;">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h3 style="color: #4a5568; font-weight: 600;">Nenhuma transação encontrada</h3>
+            <p style="color: #a0aec0; margin-bottom: 2rem;">Comece adicionando a primeira transação para esta conta</p>
+            <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" style="display: inline;">
+                <button class="btn btn-warning btn-lg px-4" type="submit"
+                        style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Adicionar Primeira Transação
+                </button>
+            </form>
         </div>
-        <h3 style="color: #4a5568; font-weight: 600;">Nenhuma transação encontrada</h3>
-        <p style="color: #a0aec0; margin-bottom: 2rem;">Comece adicionando a primeira transação para esta conta</p>
-        <form th:action="@{'/conta/' + ${idConta} + '/transacoes/form'}" method="GET" style="display: inline;">
-            <button class="btn btn-warning btn-lg px-4" type="submit"
-                    style="background: #ffd700; border-color: #ffd700; color: #1a365d; font-weight: 600;">
-                <i class="fas fa-plus me-2"></i>Adicionar Primeira Transação
-            </button>
-        </form>
     </div>
-</div>
 </div>
 </body>
 </html>

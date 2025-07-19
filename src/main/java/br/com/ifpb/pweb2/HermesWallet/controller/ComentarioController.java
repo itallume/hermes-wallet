@@ -4,6 +4,7 @@ import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
+import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
@@ -42,6 +43,8 @@ public class ComentarioController {
     ContaService _contaService;
     @Autowired
     AuthService _authService;
+    @Autowired
+    private ComentarioRepository comentarioRepository;
 
 
     @GetMapping("/form")
@@ -51,8 +54,16 @@ public class ComentarioController {
                                 ModelAndView model, RedirectAttributes attr,
                                 HttpSession session){
 
+
+
         Optional<Conta> c = _contaService.getContaById(idConta);
-        Optional<Transacao> t = _transacaoService.findTransacaoById(idTransacao); //testar
+        Optional<Transacao> t = _transacaoService.findTransacaoById(idTransacao);
+
+        if (c.isEmpty() || t.isEmpty()){
+            attr.addFlashAttribute("erro", "Conta ou transação inexistente");
+            model.setViewName("redirect:/conta/list");
+            return model;
+        }
 
         Conta conta = c.get();
         Transacao transacao = t.get();
@@ -64,6 +75,7 @@ public class ComentarioController {
             model.setViewName("redirect:/login");
             return model;
         }
+
 
         comentario.setTransacao(transacao);
         model.addObject("idConta", transacao.getConta().getId());
@@ -88,8 +100,8 @@ public class ComentarioController {
 
 
 
-        if (c.isEmpty()){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
+        if (c.isEmpty() || t.isEmpty()){
+            attr.addFlashAttribute("erro", "Conta ou transação inexistente");
             model.setViewName("redirect:/conta/list");
             return model;
         }
@@ -131,12 +143,20 @@ public class ComentarioController {
     }
 
     @GetMapping
-    public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
+    public ModelAndView list(@PathVariable( value = "idConta") Long idConta,
+                             @PathVariable(value = "idTransacao") Long idTransacao,
+                             Comentario comentario,
+                             ModelAndView model,
+                             RedirectAttributes attr,
+                             HttpSession session){
+
+
         Correntista correntista = (Correntista) session.getAttribute("usuario");
-        Optional<Conta> conta = _contaService.getContaById(id);
+        Optional<Conta> conta = _contaService.getContaById(idConta);
+
         if(_authService.verificarPermissaoConta(correntista, conta.get())){
-            model.addObject("comentarios", comentarioService.findAllById(id));
-            model.addObject("idTransacao", id);
+            model.addObject("comentarios", comentarioService.findAllById(idTransacao));
+            model.addObject("idTransacao", idTransacao);
             model.setViewName("comentarios/list");
             return model;
         }
@@ -146,37 +166,66 @@ public class ComentarioController {
     }
 
 
-//
-//    @GetMapping("/{id}")
-//    public ModelAndView getComentario(@PathVariable( value = "idConta") Long idConta,
-//                                     @PathVariable("id") Long id,
-//                                     ModelAndView model,
-//                                     RedirectAttributes attr,
-//                                     HttpSession session){
-//
-//        Optional<Conta> c = contaRepository.findById(idConta);
-//
-//        if (c.isEmpty()){
-//            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
-//            model.setViewName("redirect:/conta/list");
-//            return model;
-//        }
-//
-//        Conta conta = c.get();
-//        Correntista correntista = (Correntista) session.getAttribute("usuario");
-//
-//        if (conta.getCorrentista().getId() != correntista.getId() ){
-//            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-//            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
-//            return model;
-//        } //ADICIONAR ESSA VALIDAÇÂO DEPOIS, COMENTEI PARA PODER VALIDAR O RESTANTE DO CODIGO
-//
-//        model.addObject("categorias", TipoCategoria.values()); //  isso evita erro no <select>
-//        attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
-//
-//        model.addObject("transacao", transacaoService.findById(id));
-//        model.setViewName("transacao/formularioTransacao");
-//        return model;
-//    }
+
+    @GetMapping("/{id}")
+    public ModelAndView getComentario(@PathVariable(value = "idConta") Long idConta,
+                                      @PathVariable(value = "idTransacao") Long idTransacao,
+                                      @PathVariable(value = "id") Long id,
+                             ModelAndView model,
+                             RedirectAttributes attr,
+                             HttpSession session){
+
+        Optional<Conta> c = contaRepository.findById(idConta);
+        Optional<Transacao> t = transacaoRepository.findById(idTransacao);
+
+        if (c.isEmpty()){
+            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
+            model.setViewName("redirect:/conta/list");
+            return model;
+        }
+
+        Conta conta = c.get();
+        Transacao transacao = t.get();
+
+        Correntista correntista = (Correntista) session.getAttribute("usuario");
+
+        if (conta.getCorrentista().getId() != correntista.getId() ){
+            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
+            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
+            return model;
+        }
+
+
+
+
+        attr.addFlashAttribute("msg", "Comentário acessado com Sucesso!");
+        model.addObject("transacao", transacao);
+        model.addObject("comentario", comentarioService.findById(id));
+        model.setViewName("comentario/formulario");
+        return model;
+    }
+
+
+
+    @PostMapping("/{id}/excluir")
+    public ModelAndView excluirComentario(@PathVariable(value = "idConta") Long idConta,
+                                          @PathVariable(value = "idTransacao") Long idTransacao,
+                                          @PathVariable(value = "id") Long id,
+                                          ModelAndView model,
+                                          RedirectAttributes attr,
+                                          HttpSession session){
+
+        try{
+            comentarioService.excluirComentario(id);
+        }
+        catch (Exception e){
+            attr.addFlashAttribute("erro", "Erro inesperado");
+
+        }
+
+        attr.addFlashAttribute("msg", "Comentário excluído com Sucesso!");
+        model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+        return model;
+    }
 
 }

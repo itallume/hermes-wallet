@@ -44,6 +44,11 @@ public class ComentarioService {
     }
 
     @Transactional
+    public void excluirComentario(Long id){
+        _comentarioRepository.deleteById(id);
+    }
+
+    @Transactional
     public Optional<Comentario> findById(Long transacaoId){ //se retornar null?
         return _comentarioRepository.findById(transacaoId);
     }

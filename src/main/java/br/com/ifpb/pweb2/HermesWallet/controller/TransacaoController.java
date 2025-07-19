@@ -143,7 +143,6 @@ public class TransacaoController {
 
         model.addObject("categorias", TipoCategoria.values()); //  isso evita erro no <select>
         attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
-
         model.addObject("transacao", transacaoService.findById(id));
         model.setViewName("transacao/formularioTransacao");
         return model;
