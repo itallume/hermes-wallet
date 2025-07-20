@@ -3,6 +3,7 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TextoVazio;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
 import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
@@ -137,16 +138,19 @@ public class ComentarioController {
                 attr.addFlashAttribute("mensagem", "Comentário editado com sucesso!");
             } else {
                 comentario.setTransacao(transacao);
-                comentarioService.save(comentario);
+                comentarioService.save(comentario); // <- ESSE ESTAVA FALTANDO
                 attr.addFlashAttribute("mensagem", "Comentário criado com sucesso!");
             }
+        } catch (TextoVazio e) {
+            attr.addFlashAttribute("textoVazio", e.getMessage());
+            model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao + "/comentarios/form");
+            return model;
         } catch (Exception e) {
             attr.addFlashAttribute("erro", "Erro inesperado");
+            model.setViewName("redirect:/conta/" + idConta + "/transacoes/" + idTransacao + "/comentarios/form");
+            return model;
         }
 
-        if (model.getViewName() == null) {
-            model.setViewName("redirect:/conta/" + idConta + "/transacoes/");
-        }
 
         attr.addFlashAttribute("comentario", comentario);
         //model.setViewName("redirect:/conta/" + idConta + "/transacoes");

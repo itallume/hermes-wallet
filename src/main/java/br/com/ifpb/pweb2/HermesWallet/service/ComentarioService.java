@@ -4,6 +4,7 @@ package br.com.ifpb.pweb2.HermesWallet.service;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
 
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TextoVazio;
 import br.com.ifpb.pweb2.HermesWallet.models.Comentario;
 import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
@@ -28,10 +29,11 @@ public class ComentarioService {
     private ContaRepository _contaRepository;
 
     @Transactional
-    public Comentario save(Comentario novoComentario) throws ErroDescricao {
+    public Comentario save(Comentario novoComentario) throws ErroDescricao, TextoVazio {
 
         if (novoComentario.getTexto() == null || novoComentario.getTexto().isBlank()){
-            throw new ErroDescricao("Texto não pode ser vazio"); //criar exceção personalizada??
+
+            throw new TextoVazio("Texto não pode ser vazio");
         }
 
         return _comentarioRepository.save(novoComentario);

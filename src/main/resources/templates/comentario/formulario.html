@@ -73,6 +73,8 @@
                                onfocus="this.style.borderColor='#2c5282'"
                                onblur="this.style.borderColor='#e2e8f0'"
                                placeholder="Ex: Transação Mensal...">
+                        <p class="text-danger mt-1" th:if="${textoVazio}" th:text="${textoVazio}"></p>
+
                     </div>
 
 
