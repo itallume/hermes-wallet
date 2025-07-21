@@ -3,6 +3,9 @@ package br.com.ifpb.pweb2.HermesWallet.controller;
 import br.com.ifpb.pweb2.HermesWallet.exceptions.*;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.service.CorrentistaService;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,20 +33,16 @@ public class CorrentistaController {
             correntistaService.save(correntista);
             attr.addFlashAttribute("msg", "Correntista inserido com sucesso!");
             model.setViewName("redirect:/correntista/list");
-        } catch (NomeInvalido e) {
-            model.addObject("erroNome", e.getMessage());
-        } catch (CPFEmUso | CPFInvalido e) {
-            model.addObject("erroCPF", e.getMessage());
-        } catch (SenhaInvalida e) {
-            model.addObject("erroSenha", e.getMessage());
-        } catch (EmailEmUso | EmailInvalido e) {
-            model.addObject("erroEmail", e.getMessage());
-        } catch (Exception e) {
-            model.addObject("erro", "Erro inesperado. Tente novamente.");
+        } catch (FormValidationException e) {
+            for (Map.Entry<String, String> error : e.getErrors().entrySet()) {
+                attr.addFlashAttribute(error.getKey(), error.getValue());
+            }
+            model.setViewName("redirect:/correntista/form");
+            return model;
         }
 
         if (model.getViewName() == null) {
-            model.setViewName("/correntista/cadastroCorrentista");
+            model.setViewName("correntista/listagemCorrentistas");
         }
         model.addObject("correntista", correntista);
         return model;
