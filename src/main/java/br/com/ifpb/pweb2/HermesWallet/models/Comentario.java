@@ -3,8 +3,6 @@ package br.com.ifpb.pweb2.HermesWallet.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Instant;
-
 @Data
 @Entity
 public class Comentario {
