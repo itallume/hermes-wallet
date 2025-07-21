@@ -56,18 +56,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
     </div>
 
-    <!--    <div class="card mb-4" style="background-color: #1a365d; border: none; border-radius: 10px; color: #ffd700;">-->
-    <!--        <div class="card-body">-->
-    <!--            <h4 class="card-title" style="font-weight: 600;">Informações da Conta</h4>-->
-    <!--            <p class="card-text mb-1">-->
-    <!--                <strong>Número da Conta:</strong> <span th:text="${numeroConta}">04</span>-->
-    <!--            </p>-->
-    <!--            <p class="card-text">-->
-    <!--                <strong>Descrição:</strong> <span th:text="${descricaoConta}">Conta 04</span>-->
-    <!--            </p>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
     <!-- Main Content -->
     <div class="container mb-5">
         <div class="card" style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);">
@@ -130,60 +118,56 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:data-transacao-id="${transacao.id}"
-                            th:data-conta-id="${idConta}"
-                            th:each="transacao : ${transacoes}">
-                            <td style="padding: 1rem; color: #2c5282; font-weight: 500;" th:text="${transacao.id}"></td>
-
-                            <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
-                                th:text="${transacao.descricao}"></td>
-
-                            <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
-                                th:text="${transacao.valor}"></td>
-
-                            <td style="padding: 1rem; color: #4a5568;"
-                                th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
-
-                            <td style="padding: 1rem;">
-                                    <span class="badge"
-                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
-                                                 color: white; padding: 0.4rem 0.8rem; border-radius: 15px;"
-                                          th:text="${transacao.categoria}"></span>
-                            </td>
-
-
-                            <td style="padding: 1rem;">
-                                <div th:if="${#lists.isEmpty(transacao.comentarios)}"
-                                     style="color: #a0aec0; font-style: italic;">
-                                    Nenhum comentario
-                                </div>
-                                <div th:unless="${#lists.isEmpty(transacao.comentarios)}">
-                                    <div class="block gap-4">
-                                        <div th:text="'Total de comentários: ' + ${#lists.size(transacao.comentarios)}"
-                                             class="d-flex align-items-center flex-wrap mt-8 gap-2">
-                                                <span class="badge"
-                                                      style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
-                                                             color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
-                                                    <i class="fas fa-credit-card me-1"></i>
-                                                </span>
+                        
+                            <tr th:data-transacao-id="${transacao.id}"
+                                th:data-conta-id="${idConta}"
+                                th:each="transacao : ${transacoes}">
+                                <td style="padding: 1rem; color: #2c5282; font-weight: 500;" th:text="${transacao.id}"></td>
+                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;">
+                                    <a th:href="@{/conta/{idConta}/transacoes/{id}(idConta=${idConta}, id=${transacao.id})}"
+                                    style="text-decoration: none; color: #1a365d; font-weight: 500;"
+                                    th:text="${transacao.descricao}">
+                                    </a>
+                                </td>
+                                <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
+                                    th:text="${transacao.valor}"></td>
+                                <td style="padding: 1rem; color: #4a5568;"
+                                    th:text="${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td style="padding: 1rem;">
+                                        <span class="badge"
+                                              style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
+                                                     color: white; padding: 0.4rem 0.8rem; border-radius: 15px;"
+                                              th:text="${transacao.categoria}"></span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <div th:if="${#lists.isEmpty(transacao.comentarios)}"
+                                         style="color: #a0aec0; font-style: italic;">
+                                        Nenhum comentario
+                                    </div>
+                                    <div th:unless="${#lists.isEmpty(transacao.comentarios)}">
+                                        <div class="block gap-4">
+                                            <div th:text="'Total de comentários: ' + ${#lists.size(transacao.comentarios)}"
+                                                 class="d-flex align-items-center flex-wrap mt-8 gap-2">
+                                                    <span class="badge"
+                                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
+                                                                 color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                                        <i class="fas fa-credit-card me-1"></i>
+                                                    </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                            </td>
-
-
-                            <td>
-                                <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/detalhes(id=${idConta}, transacaoId=${transacao.id})}"
-                                   style="text-decoration: none;"><span class="badge"
-                                                                        style="background: green;
-                                                color: white;
-                                                padding: 0.5rem 1rem;
-                                                border-radius: 20px;"
-                                >Detalhes</span></a>
-
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <a th:href="@{~/conta/{id}/transacoes/{transacaoId}/detalhes(id=${idConta}, transacaoId=${transacao.id})}"
+                                       style="text-decoration: none;"><span class="badge"
+                                                                            style="background: green;
+                                                    color: white;
+                                                    padding: 0.5rem 1rem;
+                                                    border-radius: 20px;"
+                                    >Detalhes</span></a>
+                                </td>
+                            </tr>
+                        
                         </tbody>
                     </table>
                 </div>
