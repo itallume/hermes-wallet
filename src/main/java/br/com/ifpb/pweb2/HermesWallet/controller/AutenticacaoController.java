@@ -1,9 +1,9 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
 import br.com.ifpb.pweb2.HermesWallet.DTO.LoginDTO;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.DadosLoginInvalido;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.LoginOuSenhaInvalidos;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.SenhaInvalida;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.DadosLoginInvalidoException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.LoginOuSenhaInvalidosException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.SenhaInvalidaException;
 import br.com.ifpb.pweb2.HermesWallet.models.Correntista;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -45,11 +45,11 @@ public class AutenticacaoController {
                 correntista.isAdmin() ?  "redirect:/correntista/list" : "redirect:/dashboard"
             );
             return model;
-        } catch (LoginOuSenhaInvalidos e) {
+        } catch (LoginOuSenhaInvalidosException e) {
             model.addObject("erro", e.getMessage());
-        } catch (SenhaInvalida e) {
+        } catch (SenhaInvalidaException e) {
             model.addObject("erroSenha", e.getMessage());
-        } catch (DadosLoginInvalido e) {
+        } catch (DadosLoginInvalidoException e) {
             model.addObject("erroLogin", e.getMessage());
         }
         model.setViewName("/autenticacao/login");
