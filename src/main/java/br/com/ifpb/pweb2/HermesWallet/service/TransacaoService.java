@@ -1,12 +1,8 @@
 package br.com.ifpb.pweb2.HermesWallet.service;
 
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoTransacaoInvalido;
-import br.com.ifpb.pweb2.HermesWallet.models.Conta;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.FormValidationException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TransacaoNaoEncontradaException;
 import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
-import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +19,25 @@ public class TransacaoService {
     @Autowired
     private TransacaoRepository _transacaoRepository;
 
-    @Autowired
-    private ContaRepository _contaRepository;
 
     @Transactional
-    public Transacao save(Transacao novaTransacao) throws ErroCategoria, ErroDescricao, ErroValor, TipoTransacaoInvalido {
+    public Transacao save(Transacao novaTransacao) throws FormValidationException {
+        FormValidationException validationException = new FormValidationException("Erro de validação");
         novaTransacao.setData(Instant.now());
-
         if (novaTransacao.getDescricao() == null || novaTransacao.getDescricao().isBlank()){
-            throw new ErroDescricao("Descrição não pode ser vazio");
+            validationException.addError("erroDescricao","Descrição não pode ser vazio");
         }
         if (novaTransacao.getValor() < 0 || novaTransacao.getValor() == 0.0){
-            throw new ErroValor("Valor de transação inválido");
+            validationException.addError("erroValor","Valor de transação inválido");
         } //implementar a pesquisa se a categ existe no enum
         if (novaTransacao.getCategoria() == null || novaTransacao.getCategoria().name().isBlank()){
-            throw new ErroCategoria("Categoria inválida");
+            validationException.addError("erroCategoria","Categoria inválida");
         } //implementar a pesquisa se o tipo de categ existe no enum
         if (novaTransacao.getTipoTransacao() == null) {
-            throw new TipoTransacaoInvalido("Tipo de transação inválida");
+            validationException.addError("tipoTransacaoInvalido","Tipo de transação inválida");
+        }
+        if (validationException.hasErrors()) {
+            throw validationException;
         }
 
         return _transacaoRepository.save(novaTransacao);
@@ -53,17 +50,19 @@ public class TransacaoService {
     }
 
     @Transactional
-    public Optional<Transacao> findById(Long contaId){ //se retornar null?
-        return _transacaoRepository.findById(contaId);
+    public Transacao getById(Long contaId) throws TransacaoNaoEncontradaException{
+        Optional<Transacao> transacao = _transacaoRepository.findById(contaId);
+        if(transacao.isPresent()){
+            return transacao.get();
+        }
+        throw new TransacaoNaoEncontradaException("Transação não encontrada!");
     }
+    
     @Transactional
-    public List<Transacao> findAllById(Long contaId){
+    public List<Transacao> getAllByContaId(Long contaId){
         return _transacaoRepository.findByContaId(contaId);
     }
 
-    public Optional<Transacao> findTransacaoById(Long transacaoId) {
-        return _transacaoRepository.findById(transacaoId);
-    }
 }
 
 

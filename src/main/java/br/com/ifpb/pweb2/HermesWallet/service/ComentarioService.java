@@ -1,14 +1,11 @@
 package br.com.ifpb.pweb2.HermesWallet.service;
 
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ComentarioNaoEncontradoException;
 
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
-
-
-import br.com.ifpb.pweb2.HermesWallet.exceptions.TextoVazio;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TextoVazioException;
 import br.com.ifpb.pweb2.HermesWallet.models.Comentario;
+import br.com.ifpb.pweb2.HermesWallet.models.Transacao;
 import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
-import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
-import br.com.ifpb.pweb2.HermesWallet.repository.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,22 +18,21 @@ public class ComentarioService {
 
     @Autowired
     private ComentarioRepository _comentarioRepository;
-    
-    @Autowired
-    private TransacaoRepository _transacaoRepository;
-
-    @Autowired
-    private ContaRepository _contaRepository;
 
     @Transactional
-    public Comentario save(Comentario novoComentario) throws ErroDescricao, TextoVazio {
-
-        if (novoComentario.getTexto() == null || novoComentario.getTexto().isBlank()){
-
-            throw new TextoVazio("Texto não pode ser vazio");
+    public Comentario save(Comentario comentario, Transacao transacao) throws TextoVazioException {
+        if (comentario.getTexto() == null || comentario.getTexto().isBlank()){
+            throw new TextoVazioException("Texto não pode ser vazio");
         }
 
-        return _comentarioRepository.save(novoComentario);
+        if(comentario.getId()!=null){
+            Optional<Comentario> comentarioAntigoOpt =_comentarioRepository.findById(comentario.getId());
+            Comentario comentarioAntigo = comentarioAntigoOpt.get();
+            comentarioAntigo.setTexto(comentario.getTexto());
+            return _comentarioRepository.save(comentario);
+        }
+        comentario.setTransacao(transacao);
+        return _comentarioRepository.save(comentario);
     }
 
     @Transactional
@@ -51,11 +47,15 @@ public class ComentarioService {
     }
 
     @Transactional
-    public Optional<Comentario> findById(Long transacaoId){ //se retornar null?
-        return _comentarioRepository.findById(transacaoId);
+    public Comentario getById(Long transacaoId) throws ComentarioNaoEncontradoException{
+        Optional<Comentario> comentario = _comentarioRepository.findById(transacaoId);
+        if(comentario.isPresent()){
+            return comentario.get();
+        }
+        throw new ComentarioNaoEncontradoException("Comentário não encontrado!");
     }
     @Transactional
-    public List<Comentario> findAllById(Long transacaoId){
+    public List<Comentario> getAllByTransacaoId(Long transacaoId){
         return _comentarioRepository.findByTransacaoId(transacaoId);
     }
 }
