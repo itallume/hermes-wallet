@@ -51,6 +51,11 @@
         </div>
     </div>
 
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${erro}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+
     <!--    <div class="card mb-4" style="background-color: #1a365d; border: none; border-radius: 10px; color: #ffd700;">-->
     <!--        <div class="card-body">-->
     <!--            <h4 class="card-title" style="font-weight: 600;">Informações da Conta</h4>-->

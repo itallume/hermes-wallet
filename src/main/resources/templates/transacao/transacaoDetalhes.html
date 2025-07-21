@@ -17,6 +17,10 @@
 <!--    </a>-->
 <!--    </div>-->
 
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
 
     <div class="container mb-5 mt-5">
         <div class="card"

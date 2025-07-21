@@ -51,6 +51,11 @@
     <!-- Main Content -->
     <div class="container mb-5">
 
+        <!-- Mensagens -->
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
         <!-- Table Section -->
         <div class="card"
              style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
