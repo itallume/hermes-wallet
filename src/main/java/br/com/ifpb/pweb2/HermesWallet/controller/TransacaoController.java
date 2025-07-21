@@ -1,12 +1,11 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroCategoria;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroDescricao;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.ErroValor;
-import br.com.ifpb.pweb2.HermesWallet.exceptions.TipoTransacaoInvalido;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.ContaNaoEncontradaException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.FormValidationException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.NaoRelacionadoException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.PermissaoInvalidaException;
+import br.com.ifpb.pweb2.HermesWallet.exceptions.TransacaoNaoEncontradaException;
 import br.com.ifpb.pweb2.HermesWallet.models.*;
-import br.com.ifpb.pweb2.HermesWallet.repository.ComentarioRepository;
-import br.com.ifpb.pweb2.HermesWallet.repository.ContaRepository;
 import br.com.ifpb.pweb2.HermesWallet.service.AuthService;
 import br.com.ifpb.pweb2.HermesWallet.service.ComentarioService;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
@@ -18,45 +17,47 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
+import java.util.Map;
 
 @Controller
 @RequestMapping("conta/{idConta}/transacoes")
 public class TransacaoController {
 
-    @Autowired
-    ContaRepository contaRepository;
 
     @Autowired
     ContaService _contaService;
+
     @Autowired
     AuthService _authService;
+
     @Autowired
     TransacaoService transacaoService;
+
     @Autowired
     ComentarioService _comentarioService;
-    @Autowired
-    ComentarioRepository _comentarioRepository;
 
 
     @GetMapping("/form")
     public ModelAndView getForm(@PathVariable(value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr,HttpSession session){
-        Optional<Conta> contaOpt = _contaService.getContaById(id);
-        Conta conta = contaOpt.get();
-        Correntista correntista = (Correntista) session.getAttribute("usuario");
-        
-        if(!_authService.verificarPermissaoConta(correntista, conta)){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-            model.setViewName("redirect:/login");
-            return model;
+        try{
+            Conta conta = _contaService.getContaById(id);
+            Correntista correntista = (Correntista) session.getAttribute("usuario");
+            _authService.verificarPermissaoConta(correntista, conta);
+            transacao.setConta(conta);//FIXME INVESTIGAR ISSO AQUI?
+            model.addObject("idConta", conta.getId());
+            model.addObject("transacao", transacao);
+            model.addObject("categorias", TipoCategoria.values());
+            model.addObject("tipoTransacao", TipoTransacao.values());
+            model.setViewName("transacao/formularioTransacao");
         }
-        
-        transacao.setConta(conta);
-        model.addObject("idConta", conta.getId());
-        model.addObject("transacao", transacao);
-        model.addObject("categorias", TipoCategoria.values());
-        model.addObject("tipoTransacao", TipoTransacao.values());
-        model.setViewName("transacao/formularioTransacao");
+        catch(PermissaoInvalidaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/login");
+        }
+        catch(ContaNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/list");
+        }   
         return model;
     }
 
@@ -64,42 +65,34 @@ public class TransacaoController {
     @PostMapping
     public ModelAndView save(@PathVariable( value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr, HttpSession session){
 
-        Optional<Conta> c = contaRepository.findById(id);
-
-        if (c.isEmpty()){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
-            model.setViewName("redirect:/conta/list");
-            return model;
-        }
-
-        Conta conta = c.get();
-        Correntista correntista = (Correntista) session.getAttribute("usuario");
-
-        if (conta.getCorrentista().getId() != correntista.getId() ){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-            model.setViewName("redirect:/logout"); //limpa sessão e volta pro login novamente
-            return model;
-        }
-
-
-        try {
+        try{
+            Conta conta = _contaService.getContaById(id);
+            Correntista correntista = (Correntista) session.getAttribute("usuario");
+            _authService.verificarPermissaoConta(correntista, conta);
             transacaoService.save(transacao);
             attr.addFlashAttribute("mensagem", "Transacao criada com sucesso!");
             model.setViewName("redirect:/conta/" + id + "/transacoes");
-        } catch (ErroCategoria e) {
-            attr.addFlashAttribute("erroCategoria", e.getMessage());
-        } catch  (ErroDescricao e){
-            attr.addFlashAttribute("erroDescricao", e.getMessage());
-        } catch (ErroValor e){
-            attr.addFlashAttribute("erroValor", e.getMessage());
-        } catch (TipoTransacaoInvalido e){
-            attr.addFlashAttribute("tipoTransacaoInvalido", e.getMessage());
-        } catch (Exception e) {
-            attr.addFlashAttribute("erro", "Erro inesperado");
         }
+        catch(PermissaoInvalidaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/login");
+            return model;
+        }
+        catch (FormValidationException e) {
+            for (Map.Entry<String, String> error : e.getErrors().entrySet()) {
+                attr.addFlashAttribute(error.getKey(), error.getValue());
+            }
+            model.setViewName("redirect:/conta/" + id + "/transacoes/form" );
+            return model;
+        }
+        catch(ContaNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/list");
+            return model;
+        }  
 
         if (model.getViewName() == null) {
-            model.setViewName("redirect:/conta/" + id + "/transacoes/form");
+            model.setViewName("redirect:/conta/" + id + "/transacoes");
         }
 
         attr.addFlashAttribute("transacao", transacao);
@@ -108,94 +101,99 @@ public class TransacaoController {
 
     @GetMapping
     public ModelAndView list(@PathVariable( value = "idConta") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
-        Correntista correntista = (Correntista) session.getAttribute("usuario");
-        Optional<Conta> conta = _contaService.getContaById(id);
-        Conta c= conta.get();
+        //FIXME TEMTAR PASSAR OBJETO CONTA E NÃO OS CAMPOS
+        try{
+            Correntista correntista = (Correntista) session.getAttribute("usuario");
+            Conta conta = _contaService.getContaById(id);
+            _authService.verificarPermissaoConta(correntista, conta);
 
-        if(_authService.verificarPermissaoConta(correntista, conta.get())){
-            model.addObject("transacoes", transacaoService.findAllById(id));
+            model.addObject("transacoes", transacaoService.getAllByContaId(id));
             model.addObject("idConta", id);
             //model.addObject("conta", conta);
-            model.addObject("descricaoConta", c.getDescricao());
-            model.addObject("numeroConta", c.getNumero());
+            model.addObject("descricaoConta", conta.getDescricao());
+            model.addObject("numeroConta", conta.getNumero());
             model.setViewName("transacao/listaTransacao");
-            return model;
         }
-        attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta que não te pertence, faça o login novamente");
-        model.setViewName("redirect:/login");
+        catch(PermissaoInvalidaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/login");
+        }
+        catch(ContaNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/list");
+        }   
+        
         return model;
     }
 
 
 
     @GetMapping("/{id}")
-    public ModelAndView getTransacao(@PathVariable( value = "idConta") Long idConta,
-                                     @PathVariable("id") Long id,
-                                     ModelAndView model,
-                                     RedirectAttributes attr,
-                                     HttpSession session){
-
-        Optional<Conta> c = contaRepository.findById(idConta);
-
-        if (c.isEmpty()){
-            attr.addFlashAttribute("erro", "Você tentou executar uma ação de uma conta inexistente");
-            model.setViewName("redirect:/conta/list");
-            return model;
+    public ModelAndView getTransacao(@PathVariable( value = "idConta") Long idConta, @PathVariable("id") Long id, ModelAndView model, RedirectAttributes attr, HttpSession session){
+        try{
+            Conta conta = _contaService.getContaById(idConta);
+            Correntista correntista = (Correntista) session.getAttribute("usuario");
+            _authService.verificarPermissaoConta(correntista, conta);
+            model.addObject("categorias", TipoCategoria.values());
+            model.addObject("tipoTransacao", TipoTransacao.values()); //  isso evita erro no <select>
+            attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
+            model.addObject("transacao", transacaoService.getById(id));
+            model.setViewName("transacao/formularioTransacao");
+            
         }
-
-        Conta conta = c.get();
-        Correntista correntista = (Correntista) session.getAttribute("usuario");
-        model.addObject("categorias", TipoCategoria.values()); //  isso evita erro no <select>
-        attr.addFlashAttribute("msg", "Conta acessada com Sucesso!");
-        model.addObject("transacao", transacaoService.findById(id));
-        model.setViewName("transacao/formularioTransacao");
+        catch(PermissaoInvalidaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/login");
+        }
+        catch(ContaNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/list");
+        }
+        catch(TransacaoNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/transacao/list");
+        }     
         return model;
     }
 
     @GetMapping("/{id}/detalhes")
-    public ModelAndView detalhesTransacao(
-            @PathVariable Long idConta,
-            @PathVariable Long id,
-            HttpSession session,
-            RedirectAttributes attr,
-            ModelAndView model) {
-
-        // valida conta
-        Optional<Conta> contaOpt = _contaService.getContaById(idConta);
-        if (contaOpt.isEmpty()) {
-            attr.addFlashAttribute("erro", "Conta inexistente");
-            model.setViewName("redirect:/conta/list");
-            return model;
+    public ModelAndView detalhesTransacao(@PathVariable Long idConta, @PathVariable Long id, HttpSession session, RedirectAttributes attr, ModelAndView model) {
+            
+        //FIXME AJEITAR ESSES 1 MILHAO DE CAMPOSSSSSSSSSSSSSSSSSSSSSSSS
+        try{
+            Conta conta = _contaService.getContaById(idConta);
+            Transacao transacao = transacaoService.getById(id);
+            Correntista user = (Correntista) session.getAttribute("usuario");
+            _authService.verificarPermissaoConta(user, conta);
+            _authService.verificarPermissaoTransacao(conta, transacao.getId());
+            model.addObject("idConta", idConta);
+            model.addObject("transacao", transacao);
+            model.addObject("idTransacao", transacao.getId());
+            model.addObject("descricao", transacao.getDescricao());
+            model.addObject("valor", transacao.getValor());
+            model.addObject("data", transacao.getData());
+            model.addObject("categoria", transacao.getCategoria());
+            model.addObject("comentarios", transacao.getComentarios());
+            model.setViewName("transacao/transacaoDetalhes");
         }
-        Conta conta = contaOpt.get();
-
-        // valida transacao
-        Optional<Transacao> transacaoOpt = transacaoService.findTransacaoById(id);
-        if (transacaoOpt.isEmpty() || !transacaoOpt.get().getConta().getId().equals(idConta)) {
-            attr.addFlashAttribute("erro", "Transação não encontrada para esta conta");
+        catch(NaoRelacionadoException e){
+            attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/conta/" + idConta + "/transacoes");
-            return model;
         }
-        Transacao transacao = transacaoOpt.get();
-
-        // verifica permissão
-        Correntista user = (Correntista) session.getAttribute("usuario");
-        if (!_authService.verificarPermissaoConta(user, conta)) {
-            attr.addFlashAttribute("erro", "Ação não autorizada");
+        catch(PermissaoInvalidaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/login");
-            return model;
         }
-
-        model.addObject("idConta", idConta);
-        model.addObject("transacao", transacao);
-        model.addObject("idTransacao", transacao.getId());
-        model.addObject("descricao", transacao.getDescricao());
-        model.addObject("valor", transacao.getValor());
-        model.addObject("data", transacao.getData());
-        model.addObject("categoria", transacao.getCategoria());
-        model.addObject("comentarios", transacao.getComentarios());
-        model.setViewName("transacao/transacaoDetalhes");
+        catch(ContaNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/list");
+        }
+        catch (TransacaoNaoEncontradaException e){
+            attr.addFlashAttribute("erro", e.getMessage());
+            model.setViewName("redirect:/conta/" + idConta + "/transacoes");
+        }
         return model;
+        
     }
 }
 
