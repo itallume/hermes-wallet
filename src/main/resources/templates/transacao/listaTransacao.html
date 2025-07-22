@@ -144,16 +144,14 @@
                                          style="color: #a0aec0; font-style: italic;">
                                         Nenhum comentario
                                     </div>
-                                    <div th:unless="${#lists.isEmpty(transacao.comentarios)}">
-                                        <div class="block gap-4">
-                                            <div th:text="'Total de comentários: ' + ${#lists.size(transacao.comentarios)}"
-                                                 class="d-flex align-items-center flex-wrap mt-8 gap-2">
-                                                    <span class="badge"
-                                                          style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
-                                                                 color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
-                                                        <i class="fas fa-credit-card me-1"></i>
-                                                    </span>
-                                            </div>
+                                    <div th:unless="${#lists.isEmpty(transacao.comentarios)}" class="d-flex justify-content-center mt-4">
+                                        <div class="d-flex align-items-center gap-2">
+                                        <span class="badge"
+                                              style="background: linear-gradient(135deg, #2c5282 0%, #3182ce 100%);
+                                                     color: white; padding: 0.4rem 0.8rem; border-radius: 15px;">
+                                            <i class="fas fa-comment me-1"></i>
+                                            <span th:text="${#lists.size(transacao.comentarios)}">0</span>
+                                        </span>
                                         </div>
                                     </div>
                                 </td>
@@ -165,6 +163,13 @@
                                                     padding: 0.5rem 1rem;
                                                     border-radius: 20px;"
                                     >Detalhes</span></a>
+                                    <a th:href="@{/conta/{id}/transacoes/{transacaoId}(id=${idConta}, transacaoId=${transacao.id})}"
+                                       style="text-decoration: none;">
+                                        <span class="badge"
+                                              style="background: blue; color: white; padding: 0.5rem 1rem; border-radius: 20px;">
+                                            Editar
+                                        </span>
+                                    </a>
                                 </td>
                             </tr>
                         
