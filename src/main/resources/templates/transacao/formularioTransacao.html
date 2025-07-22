@@ -11,11 +11,11 @@
                 <div class="row align-items-center">
                     <div class="col-md-8">
                         <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;"
-                            th:text="${idConta != null} ? 'Edição de Transação' : 'Nova Transação'">Nova Transação
+                            th:text="${transacao.id != null} ? 'Edição de Transação' : 'Nova Transação'">
                         </h1>
                         <p style="color: #e2e8f0; margin-bottom: 0;"
-                            th:text="${idConta != null} ? 'Atualize os dados da transação selecionada' : 'Adicione uma nova movimentação à conta'">
-                            Adicione uma nova movimentação à conta
+                            th:text="${transacao.id != null} ? 'Atualize os dados da transação selecionada' : 'Adicione uma nova movimentação à conta'">
+                            
                         </p>
                     </div>
                     <div class="col-md-4 text-end">
@@ -40,12 +40,12 @@
                     <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
                         <i class="fas fa-exchange-alt me-2"></i>
                         <span
-                            th:text="${idConta != null} ? 'Editar Transação': 'Nova Movimentação'">Nova
+                            th:text="${transacao.id != null} ? 'Editar Transação': 'Nova Movimentação'">Nova
                             Movimentação</span>
                     </h4>
                     <p style="color: #e2e8f0; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
                         <span
-                            th:text="${idConta != null} ? 'Modifique os dados conforme necessário' : 'Preencha os dados da movimentação financeira'">
+                            th:text="${transacao.id != null} ? 'Modifique os dados conforme necessário' : 'Preencha os dados da movimentação financeira'">
                             Preencha os dados da movimentação financeira
                         </span>
                     </p>
@@ -187,7 +187,7 @@
                                     onmouseover="this.style.backgroundColor='#ffd700'; this.style.color='#ffd700';"
                                     onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';">  
                                 <span
-                                    th:text="${idConta != null} ? 'Atualizar Transação' : 'Salvar Transação'">Salvar
+                                    th:text="${transacao.id != null} ? 'Atualizar Transação' : 'Salvar Transação'">Salvar
                                     Transação</span>
                             </button>
                         </div>
