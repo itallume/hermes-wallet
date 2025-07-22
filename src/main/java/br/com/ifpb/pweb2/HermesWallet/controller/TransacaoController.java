@@ -63,13 +63,19 @@ public class TransacaoController {
 
 
     @PostMapping
-    public ModelAndView save(@PathVariable( value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr, HttpSession session){
+    public ModelAndView save(@PathVariable( value = "idConta") Long id, @RequestParam(value = "comentarioTexto", required = false) String comentarioTexto,Transacao transacao, ModelAndView model, RedirectAttributes attr, HttpSession session){
 
         try{
             Conta conta = _contaService.getContaById(id);
             Correntista correntista = (Correntista) session.getAttribute("usuario");
             _authService.verificarPermissaoConta(correntista, conta);
-            transacaoService.save(transacao);
+            Transacao transacaoSalva = transacaoService.save(transacao);
+            if (comentarioTexto != null && !comentarioTexto.trim().isEmpty()) { 
+                Comentario comentario = new Comentario();
+                comentario.setTexto(comentarioTexto.trim());
+                _comentarioService.save(comentario, transacaoSalva);
+            }
+            
             attr.addFlashAttribute("mensagem", "Transacao criada com sucesso!");
             model.setViewName("redirect:/conta/" + id + "/transacoes");
         }
@@ -85,7 +91,7 @@ public class TransacaoController {
             model.setViewName("redirect:/conta/" + id + "/transacoes/form" );
             return model;
         }
-        catch(ContaNaoEncontradaException e){
+        catch(Exception e){
             attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/conta/list");
             return model;

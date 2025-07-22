@@ -166,6 +166,19 @@
 
                             </div>
                         </div>
+                                                <div class="mb-4">
+                            <label class="form-label" style="color: #1a365d; font-weight: 600;">
+                                <i class="fas fa-comment me-2"></i>Comentário (Opcional):
+                            </label>
+                            <textarea class="form-control" 
+                                      name="comentarioTexto"
+                                      th:value="${comentarioTexto}"
+                                      rows="3" 
+                                      style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
+                                      onfocus="this.style.borderColor='#2c5282'" 
+                                      onblur="this.style.borderColor='#e2e8f0'"
+                                      placeholder="Adicione um comentário sobre esta transação..."></textarea>
+                        </div>
                 </div>
 
                 <!-- Buttons -->
