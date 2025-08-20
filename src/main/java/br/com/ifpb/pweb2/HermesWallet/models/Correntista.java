@@ -32,6 +32,7 @@ public class Correntista {
     private String cpf;
 
     @Email
+    @Size(max = 254)
     private String email;
 
     @NotBlank(message = "{erro.blank}")
