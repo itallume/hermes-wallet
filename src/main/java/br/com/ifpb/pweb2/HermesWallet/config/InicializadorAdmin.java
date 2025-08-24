@@ -19,6 +19,7 @@ public class InicializadorAdmin implements ApplicationRunner {
         if (correntistaRepository.findByEmail("admin@hermesWallet.com").isEmpty()) {
             Correntista correntista = new Correntista();
             correntista.setNome("Administrador");
+            correntista.setCpf("26190767060");
             correntista.setEmail("admin@hermesWallet.com");
             correntista.setSenha(SenhaUtil.hashSenha("12345678"));
             correntista.setAdmin(true);

@@ -20,8 +20,7 @@ public class Transacao {
     private Instant data;
 
     @NotBlank(message = "{erro.blank}")
-    @Max(value = 255, message = "{erro.max}")
-    @Min(value = 2, message = "{erro.min}")
+    @Size(min = 2, max = 255, message = "{erro.size}")
     private String descricao;
 
     @NotNull(message = "{erro.null}")
