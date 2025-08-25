@@ -19,22 +19,7 @@ public class ContaService {
     private ContaRepository _contaRepository;
     
     @Transactional
-    public Conta createConta(Conta contaNova, Correntista correntista) throws FormValidationException {
-        FormValidationException validationException = new FormValidationException("Erro de validação");
-
-        if (contaNova.getDescricao() == null || contaNova.getDescricao().isBlank()){
-            validationException.addError("erroDescricao","Descrição não pode ser vazia");
-        }
-        if (contaNova.getNumero() == null || contaNova.getNumero().isBlank()){
-            validationException.addError("numeroInvalido","Digite um número de conta válido");
-        }
-        if (contaNova.getTipo() == null){
-            validationException.addError("tipoContaInvalido","Descrição não pode ser vazia");
-        }
-
-        if (validationException.hasErrors()) {
-            throw validationException;
-        }
+    public Conta createConta(Conta contaNova, Correntista correntista)  {
 
         contaNova.setCorrentista(correntista);
         return _contaRepository.save(contaNova);

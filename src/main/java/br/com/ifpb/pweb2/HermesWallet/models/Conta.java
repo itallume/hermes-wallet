@@ -26,11 +26,12 @@ public class Conta {
     @NotBlank(message = "{erro.blank}")
     private String numero;
 
-    @NotNull(message = "{erro.null}")
+
     @Min(value = 1, message = "{erro.data.min}")
     @Max(value=31, message = "{erro.data.max}")
     private Integer diaFechamento;
 
+    @NotNull(message = "{erro.null}")
     @Enumerated(EnumType.STRING)
     private TipoConta tipo;
 
