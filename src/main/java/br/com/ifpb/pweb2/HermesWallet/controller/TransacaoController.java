@@ -11,8 +11,10 @@ import br.com.ifpb.pweb2.HermesWallet.service.ComentarioService;
 import br.com.ifpb.pweb2.HermesWallet.service.ContaService;
 import br.com.ifpb.pweb2.HermesWallet.service.TransacaoService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,7 +40,7 @@ public class TransacaoController {
 
 
     @GetMapping("/form")
-    public ModelAndView getForm(@PathVariable(value = "idConta") Long id, Transacao transacao, ModelAndView model, RedirectAttributes attr,HttpSession session){
+    public ModelAndView getForm(@PathVariable(value = "idConta") Long id, @Valid Transacao transacao, BindingResult result, ModelAndView model, RedirectAttributes attr, HttpSession session){
         try{
             Conta conta = _contaService.getContaById(id);
             Correntista correntista = (Correntista) session.getAttribute("usuario");
