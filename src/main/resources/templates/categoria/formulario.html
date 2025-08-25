@@ -51,7 +51,7 @@
                 </div>
 
 
-                <form method="POST" th:action="@{/categoria}" th:object="${categoria}">
+                <form method="POST" th:action="@{/categoria/save}" th:object="${categoria}">
 
                     <div class="mb-4">
                         <label class="form-label" style="color: #1a365d; font-weight: 600;">
@@ -72,8 +72,9 @@
                                 style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;"
                                 onfocus="this.style.borderColor='#2c5282'"
                                 onblur="this.style.borderColor='#e2e8f0'">
-                            <option value="false">Inativo</option>
+
                             <option value="true" >Ativo</option>
+                            <option value="false">Inativo</option>
                         </select>
                         <small class="text-danger" th:text="${erroStatus}"></small>
                     </div>
@@ -87,7 +88,7 @@
                                 onfocus="this.style.borderColor='#2c5282'"
                                 onblur="this.style.borderColor='#e2e8f0'">
                             <option value="ENTRADA">ENTRADA</option>
-                            <option value="SAIDA">SAIDA</option>
+                            <option value="SAIDA">SAÍDA</option>
                             <option value="INVESTIMENTO">INVESTIMENTO</option>
                         </select>
                         <small class="text-danger" th:text="${erroNatureza}"></small>

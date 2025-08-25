@@ -86,6 +86,9 @@
                                 Ordem
                             </th>
                             <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                Status
+                            </th>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
                                 Ações
                             </th>
                         </tr>
@@ -119,19 +122,11 @@
                                     </span>
                             </td>
 
-<!--                            <td style="padding: 1rem; color: #4a5568;">-->
-<!--                                <div th:if="${categoria.correntista}">-->
-<!--                                    <span th:text="${categoria.correntista.nome}"></span>-->
-<!--                                </div>-->
-<!--                            </td>-->
+                            <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
+                                th:text="${categoria.ativo} ? 'Ativo' : 'Inativo'"></td>
+
 
                             <td>
-<!--                                <a th:href="@{~/categoria/{id}/transacoes(id=${categoria.id})}" style="text-decoration: none;" ><span class="badge"-->
-<!--                                                                                                                              style="background: green;-->
-<!--                                                color: white;-->
-<!--                                                padding: 0.5rem 1rem;-->
-<!--                                                border-radius: 20px;"-->
-<!--                                >Transações</span></a>-->
                                 <a th:href="@{~/categoria/{id}(id=${categoria.id})}" style="text-decoration: none;" ><span class="badge"
                                                                                                                    style="background: yellow;
                                                 color: #2c5282;
