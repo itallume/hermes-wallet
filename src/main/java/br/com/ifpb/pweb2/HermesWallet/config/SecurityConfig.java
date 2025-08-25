@@ -32,7 +32,9 @@ public class SecurityConfig {
     SecurityFilterChain configure(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/imagens/**", "/css/**").permitAll()
+                        .requestMatchers("/imagens/**", "/css/**", "/").permitAll()
+                        .requestMatchers("/correntista/**", "/categoria/**").hasRole("ADMIN")
+                        .requestMatchers("/conta/**").hasRole("CLIENTE")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -60,10 +62,21 @@ public class SecurityConfig {
                 .password(passwordEncoder().encode("admin"))
                 .roles("ADMIN", "CLIENTE")
                 .build();
+        UserDetails user2 = User.withUsername("charles")
+                .password(passwordEncoder().encode("babbage"))
+                .roles("CLIENTE")
+                .build();
+
+        UserDetails user3 = User.withUsername("fred")
+                .password(passwordEncoder().encode("fred"))
+                .roles("CLIENTE")
+                .build();
 
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
         if (!users.userExists(user1.getUsername())){
             users.createUser(user1);
+            users.createUser(user2);
+            users.createUser(user3);
         }
         return users;
     }
