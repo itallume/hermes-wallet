@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,7 @@ public class CategoriaService {
     private CategoriaRepository _CategoriaRepository;
 
     @Transactional
-    public Categoria save(Categoria Categoria) throws TextoVazioException {
+    public Categoria createCategoria(Categoria Categoria) throws TextoVazioException {
         if (Categoria.getNome() == null || Categoria.getNome().isBlank()){
             throw new TextoVazioException("Texto não pode ser vazio");
         }
@@ -50,10 +51,10 @@ public class CategoriaService {
         }
         throw new CategoriaNaoEncontradaException("Comentário não encontrado!");
     }
-//    @Transactional
-//    public List<Categoria> getAllByTransacaoId(Long transacaoId){
-//        return _CategoriaRepository.findByTransacaoId(transacaoId);
-//    }
+    @Transactional
+    public List<Categoria> getAll(){
+        return _CategoriaRepository.findAll();
+    }
 }
 
 
