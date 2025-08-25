@@ -28,12 +28,12 @@ public class AuthService {
     @Autowired
     CorrentistaRepository _correntistaRepository;
 
-    public void verificaCorrentista(String senhaDigitada, Correntista correntista) throws LoginOuSenhaInvalidosException {
-
-        if (!SenhaUtil.verificarSenha(senhaDigitada, correntista.getSenha())) {
-            throw new LoginOuSenhaInvalidosException("Login ou Senha inválidos");
-        }
-    }
+//    public void verificaCorrentista(String senhaDigitada, Correntista correntista) throws LoginOuSenhaInvalidosException {
+//
+//        if (!SenhaUtil.verificarSenha(senhaDigitada, correntista.getSenha())) {
+//            throw new LoginOuSenhaInvalidosException("Login ou Senha inválidos");
+//        }
+//    }
 
     public void verificarPermissaoConta(Correntista correntista,  Conta conta) throws PermissaoInvalidaException{
         if(correntista.getId()!= conta.getCorrentista().getId()){

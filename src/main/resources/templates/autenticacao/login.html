@@ -77,18 +77,18 @@
                         </div>
 
                         <!-- Formulário -->
-                        <form th:action="@{/login}" method="post" th:object="${login}">
+                        <form th:action="@{/login}" method="POST">
                             <h3 class="fw-normal mb-3 pb-3 text-center" style="letter-spacing:1px;">Login</h3>
 
                             <div class="mb-4">
                                 <label for="login" class="form-label">CPF ou Email:</label>
-                                <input type="text" th:field="*{login}" class="form-control form-control-lg" id="login" placeholder="Digite um email ou CPF">
+                                <input type="text" class="form-control form-control-lg" id="login" placeholder="Digite CPF" required autofocus name="username">
                                 <small class="text-danger" th:text="${erroLogin}"></small>
                             </div>
 
                             <div class="mb-4">
                                 <label for="senha" class="form-label">Senha:</label>
-                                <input type="password" th:field="*{senha}" class="form-control form-control-lg" id="senha" placeholder="Digite sua senha">
+                                <input type="password" class="form-control form-control-lg" id="senha" placeholder="Digite sua senha" required name="password">
                                 <small class="text-danger" th:text="${erroSenha}"></small>
                             </div>
 

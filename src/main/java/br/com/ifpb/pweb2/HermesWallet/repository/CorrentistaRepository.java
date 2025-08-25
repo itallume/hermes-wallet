@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CorrentistaRepository extends JpaRepository<Correntista, Long>{
     Optional<Correntista> findByCpf(String cpf);
     Optional<Correntista> findByEmail(String email);
+
+    Correntista findByUserUsername(String username);
 }

@@ -35,12 +35,12 @@ public class Correntista {
     @Size(max = 254)
     private String email;
 
-    @NotBlank(message = "{erro.blank}")
-    @Size(min = 6, max = 128)
-    private String senha;
-
     @NotNull(message = "{erro.null}")
     private boolean admin;
+
+    @OneToOne
+    @JoinColumn(name = "username")
+    private User user;
 
     @OneToMany(mappedBy = "correntista", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Conta> contas;

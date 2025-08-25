@@ -1,6 +1,10 @@
 package br.com.ifpb.pweb2.HermesWallet.controller;
 
+import br.com.ifpb.pweb2.HermesWallet.service.CorrentistaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +32,15 @@ public class DashboardController {
 
     @Autowired
     ContaService _contaService;
+
+    @Autowired
+    CorrentistaService correntistaService;
     
 @GetMapping
 public ModelAndView dashboard(@RequestParam(required = false) Long contaId, ModelAndView model, HttpSession session, RedirectAttributes attr) {
-    
-    Correntista correntista = (Correntista) session.getAttribute("usuario");   
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String username = auth.getName();
+    Correntista correntista = correntistaService.findByUsername(username);
     
     if (contaId != null) {
         try{
@@ -53,7 +61,9 @@ public ModelAndView dashboard(@RequestParam(required = false) Long contaId, Mode
             return model;
         }
     } else {
-        model.addObject("contas", _contaService.getContasByCorrentista(correntista));
+        if (correntista != null){
+            model.addObject("contas", _contaService.getContasByCorrentista(correntista));
+        }
     }
     
     model.setViewName("home/dashboard");

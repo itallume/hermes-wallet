@@ -27,41 +27,40 @@ public class AutenticacaoController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getForm(ModelAndView model, LoginDTO loginDTO){
-        model.addObject("login", loginDTO);
+    public ModelAndView getForm(ModelAndView model){
         model.setViewName("/autenticacao/login");
         return model;
     }
 
-    @PostMapping("/login")
-    public ModelAndView authenticate(ModelAndView model, LoginDTO loginDTO, HttpSession session, RedirectAttributes attributes){
-        try {
-            Correntista correntista = _authService.obterCorrentistaPeloLogin(loginDTO);
-            _authService.verificaCorrentista(loginDTO.senha(), correntista);
-            session.setAttribute("usuario", correntista);
-            attributes.addFlashAttribute("greeting", "Olá " + correntista.getNome() + "!");
+//    @PostMapping("/login")
+//    public ModelAndView authenticate(ModelAndView model, LoginDTO loginDTO, HttpSession session, RedirectAttributes attributes){
+//        try {
+//            Correntista correntista = _authService.obterCorrentistaPeloLogin(loginDTO);
+//            _authService.verificaCorrentista(loginDTO.senha(), correntista);
+//            session.setAttribute("usuario", correntista);
+//            attributes.addFlashAttribute("greeting", "Olá " + correntista.getNome() + "!");
+//
+//            model.setViewName(
+//                correntista.isAdmin() ?  "redirect:/correntista/list" : "redirect:/dashboard"
+//            );
+//            return model;
+//        } catch (LoginOuSenhaInvalidosException e) {
+//            model.addObject("erro", e.getMessage());
+//        } catch (SenhaInvalidaException e) {
+//            model.addObject("erroSenha", e.getMessage());
+//        } catch (DadosLoginInvalidoException e) {
+//            model.addObject("erroLogin", e.getMessage());
+//        }
+//        model.setViewName("/autenticacao/login");
+//        model.addObject("login", loginDTO);
+//        return model;
+//    }
 
-            model.setViewName(
-                correntista.isAdmin() ?  "redirect:/correntista/list" : "redirect:/dashboard"
-            );
-            return model;
-        } catch (LoginOuSenhaInvalidosException e) {
-            model.addObject("erro", e.getMessage());
-        } catch (SenhaInvalidaException e) {
-            model.addObject("erroSenha", e.getMessage());
-        } catch (DadosLoginInvalidoException e) {
-            model.addObject("erroLogin", e.getMessage());
-        }
-        model.setViewName("/autenticacao/login");
-        model.addObject("login", loginDTO);
-        return model;
-    }
-
-    @GetMapping("/logout")
-    public ModelAndView logout(ModelAndView mav, HttpSession session) {
-        session.invalidate();
-        mav.setViewName("redirect:/login");
-        return mav;
-    }
+//    @GetMapping("/logout")
+//    public ModelAndView logout(ModelAndView mav, HttpSession session) {
+//        session.invalidate();
+//        mav.setViewName("redirect:/login");
+//        return mav;
+//    }
 
 }
