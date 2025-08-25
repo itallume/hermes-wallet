@@ -48,7 +48,7 @@ public class CategoriaController {
         return model;
     }
 
-    @GetMapping("form")
+    @GetMapping("/form")
     public ModelAndView createForm(ModelAndView model, Categoria categoria) {
         model.addObject("categoria", categoria);
         model.addObject("tiposcategoria", TipoCategoria.values());
@@ -56,15 +56,15 @@ public class CategoriaController {
         return model;
     }
     
-    @GetMapping("list")
+    @GetMapping("/list")
     public ModelAndView list( ModelAndView model, HttpSession session) {
         Correntista correntista = (Correntista) session.getAttribute("usuario");
         model.addObject("categorias", _categoriaService.getAll());
-        model.setViewName("categoria/lista");
+        model.setViewName("categoria/list");
         return model;
     }
 
-    @PostMapping("save")
+    @PostMapping("/save")
     public ModelAndView save(Categoria categoria, ModelAndView model, RedirectAttributes attr, HttpSession session) {
 //        Correntista correntista = (Correntista) session.getAttribute("usuario");
         try {
