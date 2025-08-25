@@ -5,8 +5,10 @@ import br.com.ifpb.pweb2.HermesWallet.exceptions.PermissaoInvalidaException;
 
 import java.util.Map;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,8 +73,15 @@ public class ContaController {
     }
 
     @PostMapping("save")
-    public ModelAndView save(Conta conta, ModelAndView model, RedirectAttributes attr, HttpSession session) {
+    public ModelAndView save(@Valid Conta conta, BindingResult result, ModelAndView model, RedirectAttributes attr, HttpSession session) {
         Correntista correntista = (Correntista) session.getAttribute("usuario");
+
+        if (result.hasErrors()){
+            model.addObject("tiposConta", TipoConta.values());
+            model.addObject("conta", conta);
+            model.setViewName("conta/formulario");
+            return model;
+        }
         try {
             _contaService.createConta(conta,correntista);
             _authService.verificarPermissaoConta(correntista, conta);
@@ -82,12 +91,6 @@ public class ContaController {
         catch(PermissaoInvalidaException e){
             attr.addFlashAttribute("erro", e.getMessage());
             model.setViewName("redirect:/login");
-        }
-        catch (FormValidationException e) {
-            for (Map.Entry<String, String> error : e.getErrors().entrySet()) {
-                attr.addFlashAttribute(error.getKey(), error.getValue());
-            }
-            model.setViewName("redirect:/conta/form");
         }
 
         if (model.getViewName() == null){
