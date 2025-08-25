@@ -1,13 +1,174 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Categorias</title>
-</head>
-<body>
-<h1>Lista de Categoria</h1>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      th:with="titulo='Listagem de categorias'">
 
-<ul>
-    <li th:each="categoria : ${categorias}" th:text="${categoria.getNome()}"></li>
-</ul>
+<body>
+<div layout:fragment="content">
+
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+                padding: 2rem 0;
+                margin-bottom: 2rem;">
+        <div class="categoriainer">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 style="color: #ffd700; font-weight: 600; margin-bottom: 0.5rem;">
+                        Gerenciamento de categorias
+                    </h1>
+                    <p style="color: #e2e8f0; margin-bottom: 0;">
+                        Visualize e gerencie todas as suas categorias
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <form th:action="@{/categoria/form}" method="GET" style="display: inline;">
+                        <button class="btn btn-warning btn-lg px-4" type="submit"
+                                style="background: #ffd700;
+                                       border-color: #ffd700;
+                                       color: #1a365d;
+                                       font-weight: 600;
+                                       box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);">
+                            <i class="fas fa-plus me-2"></i>Nova categoria
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Alert -->
+    <div class="categoriainer" th:if="${mensagem}">
+        <div class="alert alert-info"
+             style="background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+                    border: 1px solid #2c5282;
+                    color: #1a365d;
+                    border-radius: 8px;">
+            <h5 th:text="${mensagem}" style="margin: 0; font-weight: 500;"></h5>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="categoriainer mb-5">
+
+        <!-- Mensagens -->
+        <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${erro}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+        <!-- Table Section -->
+        <div class="card"
+             style="border: none; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);">
+            <div class="card-header"
+                 style="background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+                        border-radius: 12px 12px 0 0;
+                        padding: 1.5rem;">
+                <h4 style="color: #ffd700; margin: 0; font-weight: 600;">
+                    <i class="fas fa-list me-2"></i>Lista de categorias
+                </h4>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center mb-0">
+                        <thead style="background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);">
+                        <tr>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                ID
+                            </th>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                Nome
+                            </th>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                Natureza
+                            </th>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                Ordem
+                            </th>
+                            <th style="color: #1a365d; font-weight: 600; padding: 1rem;">
+                                Ações
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="categoria : ${categorias}"
+                            style="border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease;"
+                            onmouseover="this.style.backgroundColor='#f7fafc'"
+                            onmouseout="this.style.backgroundColor='transparent'">
+
+                            <td style="padding: 1rem; color: #2c5282; font-weight: 500;">
+                                [[${categoria.id}]]
+                            </td>
+
+                            <td style="padding: 1rem; color: #1a365d; font-weight: 500;"
+                                th:text="${categoria.getNome()}"></td>
+
+
+                            <td style="padding: 1rem; color: #4a5568;">
+                                <span th:text="${categoria.getNatureza()}"></span>
+                            </td>
+
+                            <td style="padding: 1rem;">
+                                    <span class="badge"
+                                          style="background: linear-gradient(135deg, #718096 0%, #a0aec0 100%);
+                                                color: white;
+                                                padding: 0.5rem 1rem;
+                                                border-radius: 20px;
+                                                font-weight: 500;">
+                                        <span th:text="${categoria.getOrdem()}"></span>
+                                    </span>
+                            </td>
+
+<!--                            <td style="padding: 1rem; color: #4a5568;">-->
+<!--                                <div th:if="${categoria.correntista}">-->
+<!--                                    <span th:text="${categoria.correntista.nome}"></span>-->
+<!--                                </div>-->
+<!--                            </td>-->
+
+                            <td>
+<!--                                <a th:href="@{~/categoria/{id}/transacoes(id=${categoria.id})}" style="text-decoration: none;" ><span class="badge"-->
+<!--                                                                                                                              style="background: green;-->
+<!--                                                color: white;-->
+<!--                                                padding: 0.5rem 1rem;-->
+<!--                                                border-radius: 20px;"-->
+<!--                                >Transações</span></a>-->
+                                <a th:href="@{~/categoria/{id}(id=${categoria.id})}" style="text-decoration: none;" ><span class="badge"
+                                                                                                                   style="background: yellow;
+                                                color: #2c5282;
+                                                padding: 0.5rem 1rem;
+                                                border-radius: 20px;"
+                                >Editar categoria</span></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(categorias)}" class="text-center py-5">
+            <div style="color: #a0aec0; font-size: 4rem; margin-bottom: 1rem;">
+                <i class="fas fa-credit-card"></i>
+            </div>
+            <h3 style="color: #4a5568; font-weight: 600;">
+                Nenhuma categoria encontrada
+            </h3>
+            <p style="color: #a0aec0; margin-bottom: 2rem;">
+                Comece adicionando a primeira categoria ao sistema
+            </p>
+            <form th:action="@{/categoria/form}" method="GET" style="display: inline;">
+                <button class="btn btn-warning btn-lg px-4" type="submit"
+                        style="background: #ffd700;
+                               border-color: #ffd700;
+                               color: #1a365d;
+                               font-weight: 600;">
+                    <i class="fas fa-plus me-2"></i>Adicionar Primeira Categoria
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
 </body>
 </html>
